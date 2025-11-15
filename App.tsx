@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { LandingPage as LandingPageExternal } from './pages/LandingPage';
 import { UserRole, View, CourseModule, QASubmission, ServicePoint, MapServiceType, RoadmapItem, LeaderboardUser, Scenario, AdminStats, ModuleCompletion, UserDistribution } from './types';
 import { PARENT_RESOURCES, QA_DATA, MAP_SERVICES, ICONS, LANDING_ICONS, ROADMAP_DATA, LEADERBOARD_DATA, STUDENT_MS_COURSES, STUDENT_HS_COURSES, ADMIN_STATS_DATA, MODULE_COMPLETION_DATA, USER_DISTRIBUTION_DATA } from './constants';
 import { moderateQuestion, generateScenario } from './services/geminiService';
@@ -1022,7 +1023,7 @@ export default function App() {
     return <SplashScreen/>;
   }
   if (!isLoggedIn) {
-    return <LandingPage onNavigate={handleNavigate} />;
+    return <LandingPageExternal onNavigate={handleNavigate} />;
   }
 
   return <MainApp 
