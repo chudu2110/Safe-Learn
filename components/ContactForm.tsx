@@ -40,38 +40,38 @@ export const ContactForm: React.FC = () => {
   const allValid = name && email && subject && message && Object.keys(errors).length === 0;
 
   return (
-    <form onSubmit={handleSubmit} className="scroll-animate bg-white p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 transition-transform duration-300 hover:-translate-y-1">
+    <form onSubmit={handleSubmit} className="scroll-animate bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 dark:border-slate-700 transition-transform duration-300 hover:-translate-y-1">
       <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-semibold text-slate-700">Họ và tên</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Họ và tên</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 dark:bg-slate-900 dark:text-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
           {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
         </div>
         <div>
-          <label className="text-sm font-semibold text-slate-700">Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Email</label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 dark:bg-slate-900 dark:text-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
           {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
         </div>
       </div>
       <div className="grid md:grid-cols-2 gap-4 mt-4">
         <div>
-          <label className="text-sm font-semibold text-slate-700">Số điện thoại (tuỳ chọn)</label>
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Số điện thoại (tuỳ chọn)</label>
+          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 dark:bg-slate-900 dark:text-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
           {errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
         </div>
         <div>
-          <label className="text-sm font-semibold text-slate-700">Tiêu đề</label>
-          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tiêu đề</label>
+          <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 dark:bg-slate-900 dark:text-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
           {errors.subject && <p className="mt-1 text-xs text-red-600">{errors.subject}</p>}
         </div>
       </div>
       <div className="mt-4">
-        <label className="text-sm font-semibold text-slate-700">Nội dung</label>
-        <textarea rows={5} value={message} onChange={(e) => setMessage(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
+        <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nội dung</label>
+        <textarea rows={5} value={message} onChange={(e) => setMessage(e.target.value)} className="mt-1 w-full p-3 bg-slate-100 dark:bg-slate-900 dark:text-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
         {errors.message && <p className="mt-1 text-xs text-red-600">{errors.message}</p>}
       </div>
       {submitted && <p className="mt-3 text-sm font-medium text-green-600">Đã gửi liên hệ. Chúng tôi sẽ phản hồi sớm nhất!</p>}
-      <button type="submit" disabled={!allValid || isSubmitting} className="mt-4 bg-cyan-500 hover:bg-cyan-600 disabled:bg-slate-400 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">
+      <button type="submit" disabled={isSubmitting} className="mt-4 bg-cyan-500 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple hover:bg-cyan-600 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300">
         {isSubmitting ? 'Đang gửi...' : 'Gửi email'}
       </button>
     </form>
