@@ -34,7 +34,7 @@ export const LandingHeader: React.FC<{ onNavigate: (target: string) => void; isL
               <>
                 <button onClick={() => onToggleDark && onToggleDark()} aria-label="Chuyển chế độ tối" className="flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-100 hover:dark:bg-slate-700 transition-colors">
                   {isDark ? ICONS.sun : ICONS.moon}
-                  <span className="hidden sm:inline">Dark Mode</span>
+                  <span className="hidden sm:inline">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
                 </button>
                 <button onClick={() => onNavigate('Bắt đầu học')} className="text-sm font-bold text-white bg-cyan-500 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-4 py-2 rounded-lg hover:bg-cyan-600 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors">Bắt đầu học</button>
               </>

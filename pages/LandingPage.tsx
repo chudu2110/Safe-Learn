@@ -18,7 +18,7 @@ export const LandingPage: React.FC<{ onNavigate: (target: string) => void; isLog
   }, []);
   useEffect(() => {
     const saved = localStorage.getItem('theme');
-    const dark = saved ? saved === 'dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const dark = saved ? saved === 'dark' : false;
     setIsDark(dark);
     document.documentElement.classList.toggle('dark', dark);
   }, []);

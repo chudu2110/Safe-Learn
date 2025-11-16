@@ -42,22 +42,22 @@ const CountUp: React.FC<{ end: number; duration?: number; suffix?: string }> = (
 };
 
 const SplashScreen: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-50 via-white to-accent-purple/10 relative overflow-hidden">
-    <div className="absolute top-12 left-10 w-6 h-6 rounded-full bg-cyan-100 animate-floating"></div>
-    <div className="absolute bottom-14 right-16 w-8 h-8 rounded-full bg-rose-100 animate-floating"></div>
-    <div className="absolute top-1/3 right-1/4 w-4 h-4 rounded-full bg-accent-orange/30 animate-floating"></div>
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-50 via-white to-accent-purple/10 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 relative overflow-hidden">
+    <div className="absolute top-12 left-10 w-6 h-6 rounded-full bg-cyan-100 dark:bg-white/10 animate-floating"></div>
+    <div className="absolute bottom-14 right-16 w-8 h-8 rounded-full bg-rose-100 dark:bg-white/10 animate-floating"></div>
+    <div className="absolute top-1/3 right-1/4 w-4 h-4 rounded-full bg-accent-orange/30 dark:bg-white/10 animate-floating"></div>
     <div className="text-center">
       <div className="relative mx-auto w-24 h-24">
         <div className="absolute inset-0 rounded-full border-4 border-t-cyan-400 border-b-accent-purple border-l-transparent border-r-transparent animate-spin"></div>
-        <div className="absolute inset-2 rounded-full border-2 border-cyan-200 animate-pulse"></div>
-        <div className="absolute inset-4 rounded-full bg-white flex items-center justify-center shadow-xl">
+        <div className="absolute inset-2 rounded-full border-2 border-cyan-200 dark:border-white/10 animate-pulse"></div>
+        <div className="absolute inset-4 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-xl dark:shadow-[0_0_24px_rgba(6,182,212,0.25)]">
           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-cyan-500 text-white">{LANDING_ICONS.logo}</div>
         </div>
       </div>
-      <p className="mt-6 text-2xl font-extrabold text-slate-900">SafeLearn</p>
-      <p className="mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-accent-purple">Giáo dục an toàn, khoa học & thân thiện</p>
-      <div className="mt-6 w-48 h-2 bg-slate-200 rounded-full mx-auto overflow-hidden relative">
-        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-cyan-500 to-accent-purple rounded-full" style={{ animation: 'loadingSlide 1.4s ease-in-out infinite' }}></div>
+      <p className="mt-6 text-2xl font-extrabold text-slate-900 dark:text-white">SafeLearn</p>
+      <p className="mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-accent-purple dark:from-cyan-400 dark:to-accent-purple">Giáo dục an toàn, khoa học & thân thiện</p>
+      <div className="mt-6 w-48 h-2 bg-slate-200 dark:bg-white/10 rounded-full mx-auto overflow-hidden relative">
+        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-cyan-500 to-accent-purple rounded-full dark:shadow-[0_0_18px_rgba(6,182,212,0.45)]" style={{ animation: 'loadingSlide 1.4s ease-in-out infinite' }}></div>
       </div>
     </div>
     <style>{`@keyframes loadingSlide { 0% { transform: translateX(-100%);} 50% { transform: translateX(0%);} 100% { transform: translateX(100%);} }`}</style>
@@ -455,31 +455,31 @@ const AuthPage: React.FC<{
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50">
-      <div className="relative hidden lg:flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-100 via-white to-accent-purple/20">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50 dark:bg-slate-900">
+      <div className="relative hidden lg:flex items-center justify-center overflow-hidden bg-gradient-to-br from-cyan-100 via-white to-accent-purple/20 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
         <div className="absolute inset-0">
           <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full" style={{background:'radial-gradient(closest-side, rgba(6,182,212,0.28), transparent 70%)', filter:'blur(40px)', animation:'blobMove 18s ease-in-out infinite'}}></div>
           <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full" style={{background:'radial-gradient(closest-side, rgba(168,85,247,0.24), transparent 70%)', filter:'blur(50px)', animation:'blobMove 22s ease-in-out infinite reverse'}}></div>
           <div className="absolute bottom-0 left-1/4 w-64 h-64 rounded-full" style={{background:'radial-gradient(closest-side, rgba(249,115,22,0.20), transparent 70%)', filter:'blur(45px)', animation:'blobMove 26s ease-in-out infinite'}}></div>
         </div>
-        <div className="relative z-10 text-center text-slate-900 px-10">
+        <div className="relative z-10 text-center text-slate-900 dark:text-white px-10">
           <div className="group mx-auto w-20 h-20 flex items-center justify-center rounded-2xl bg-white/20 backdrop-blur animate-heartbeat transition-all duration-300 hover:bg-white/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] hover:ring-2 hover:ring-cyan-300">
             {LANDING_ICONS.logo}
           </div>
           <h1 className="mt-6 text-4xl font-black">SafeLearn</h1>
-          <p className="mt-3 text-slate-700">Giáo dục giới tính an toàn, khoa học & thân thiện</p>
+          <p className="mt-3 text-slate-700 dark:text-slate-300">Giáo dục giới tính an toàn, khoa học & thân thiện</p>
           <div className="mt-8 grid grid-cols-3 gap-4 text-left">
-            <div className="group p-3 rounded-2xl bg-white/60 backdrop-blur transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1">
-              <div className="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center text-cyan-500 ring-1 ring-slate-200 transition-all duration-300 group-hover:ring-cyan-300 group-hover:shadow-[0_0_12px_rgba(6,182,212,0.35)]">{LANDING_ICONS.shield}</div>
-              <p className="mt-2 text-sm text-slate-700 transition-colors duration-300 group-hover:text-slate-900">100% Ẩn danh</p>
+            <div className="group p-3 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur transition-all duration-300 hover:bg-white/80 dark:hover:bg-white/20 hover:shadow-xl hover:-translate-y-1">
+              <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-white/20 flex items-center justify-center text-cyan-500 ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 group-hover:ring-cyan-300 group-hover:shadow-[0_0_12px_rgba(6,182,212,0.35)]">{LANDING_ICONS.shield}</div>
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300 group-hover:text-slate-900 dark:group-hover:text-white">100% Ẩn danh</p>
             </div>
-            <div className="group p-3 rounded-2xl bg-white/60 backdrop-blur transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1">
-              <div className="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center text-accent-orange ring-1 ring-slate-200 transition-all duration-300 group-hover:ring-orange-300 group-hover:shadow-[0_0_12px_rgba(249,115,22,0.35)]">{LANDING_ICONS.expert}</div>
-              <p className="mt-2 text-sm text-slate-700 transition-colors duration-300 group-hover:text-slate-900">Chuyên gia hỗ trợ</p>
+            <div className="group p-3 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur transition-all duration-300 hover:bg-white/80 dark:hover:bg-white/20 hover:shadow-xl hover:-translate-y-1">
+              <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-white/20 flex items-center justify-center text-accent-orange ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 group-hover:ring-orange-300 group-hover:shadow-[0_0_12px_rgba(249,115,22,0.35)]">{LANDING_ICONS.expert}</div>
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300 group-hover:text-slate-900 dark:group-hover:text-white">Chuyên gia hỗ trợ</p>
             </div>
-            <div className="group p-3 rounded-2xl bg-white/60 backdrop-blur transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-1">
-              <div className="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center text-accent-purple ring-1 ring-slate-200 transition-all duration-300 group-hover:ring-purple-300 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.35)]">{LANDING_ICONS.interactive}</div>
-              <p className="mt-2 text-sm text-slate-700 transition-colors duration-300 group-hover:text-slate-900">Tương tác dễ hiểu</p>
+            <div className="group p-3 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur transition-all duration-300 hover:bg-white/80 dark:hover:bg-white/20 hover:shadow-xl hover:-translate-y-1">
+              <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-white/20 flex items-center justify-center text-accent-purple ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 group-hover:ring-purple-300 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.35)]">{LANDING_ICONS.interactive}</div>
+              <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300 group-hover:text-slate-900 dark:group-hover:text-white">Tương tác dễ hiểu</p>
             </div>
           </div>
         </div>
@@ -488,48 +488,48 @@ const AuthPage: React.FC<{
         .animate-heartbeat { animation: heartbeat 1.8s ease-in-out infinite; }`}</style>
       </div>
       <div className="flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200 dark:border-slate-700 p-6 sm:p-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-slate-900">
+            <div className="flex items-center space-x-2 text-slate-900 dark:text-white">
               {LANDING_ICONS.logo}
               <span className="text-xl font-extrabold">SafeLearn</span>
             </div>
-            <button onClick={onBack} className="text-sm font-semibold text-slate-500 hover:text-cyan-600">Quay lại</button>
+            <button onClick={onBack} className="text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300">Quay lại</button>
           </div>
-          <div className="mt-6 flex gap-2 bg-slate-100 p-1 rounded-full w-fit">
-            <button onClick={() => setMode('login')} className={`px-4 py-2 text-sm font-bold rounded-full ${mode==='login' ? 'bg-white text-cyan-600 shadow' : 'text-slate-600'}`}>Đăng nhập</button>
-            <button onClick={() => setMode('register')} className={`px-4 py-2 text-sm font-bold rounded-full ${mode==='register' ? 'bg-white text-cyan-600 shadow' : 'text-slate-600'}`}>Đăng ký</button>
+          <div className="mt-6 flex gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-full w-fit">
+            <button onClick={() => setMode('login')} className={`px-4 py-2 text-sm font-bold rounded-full ${mode==='login' ? 'bg-white dark:bg-slate-900 text-cyan-600 dark:text-white shadow' : 'text-slate-600 dark:text-slate-300'}`}>Đăng nhập</button>
+            <button onClick={() => setMode('register')} className={`px-4 py-2 text-sm font-bold rounded-full ${mode==='register' ? 'bg-white dark:bg-slate-900 text-cyan-600 dark:text-white shadow' : 'text-slate-600 dark:text-slate-300'}`}>Đăng ký</button>
           </div>
           <div className="mt-6 space-y-4">
             <div>
-              <label className="text-sm font-semibold text-slate-700">Họ tên</label>
-              <input value={name} onChange={(e)=>setName(e.target.value)} className="mt-1 w-full p-3 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-cyan-500" />
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Họ tên</label>
+              <input value={name} onChange={(e)=>setName(e.target.value)} className="mt-1 w-full p-3 bg-white dark:bg-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" />
             </div>
             {mode==='register' && (
               <div>
-                <label className="text-sm font-semibold text-slate-700">Email</label>
-                <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} className="mt-1 w-full p-3 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-cyan-500" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Email</label>
+                <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} className="mt-1 w-full p-3 bg-white dark:bg-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" />
               </div>
             )}
             {mode==='register' && (
               <div>
-                <label className="text-sm font-semibold text-slate-700">Mật khẩu</label>
-                <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} className="mt-1 w-full p-3 bg-white rounded-lg border border-slate-200 focus:ring-2 focus:ring-cyan-500" />
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Mật khẩu</label>
+                <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} className="mt-1 w-full p-3 bg-white dark:bg-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-cyan-500" />
               </div>
             )}
           </div>
           <div className="mt-6">
-            <p className="text-sm font-semibold text-slate-700 mb-2">Chọn vai trò</p>
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Chọn vai trò</p>
             <div className="flex flex-wrap gap-2">
               {[UserRole.STUDENT_MS, UserRole.STUDENT_HS, UserRole.PARENT, UserRole.ADMIN].map(r => (
-                <button key={r} onClick={()=>setRole(r)} className={`px-3 py-1.5 text-sm font-bold rounded-full border ${role===r ? 'bg-cyan-50 text-cyan-700 border-cyan-300' : 'bg-white text-slate-700 border-slate-200'}`}>{r===UserRole.STUDENT_MS?'THCS':r===UserRole.STUDENT_HS?'THPT':r===UserRole.PARENT?'Phụ Huynh':'Admin'}</button>
+                <button key={r} onClick={()=>setRole(r)} className={`px-3 py-1.5 text-sm font-bold rounded-full border ${role===r ? 'bg-cyan-50 text-cyan-700 border-cyan-300 dark:bg-cyan-500/10 dark:text-cyan-300 dark:border-cyan-700' : 'bg-white text-slate-700 border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700'}`}>{r===UserRole.STUDENT_MS?'THCS':r===UserRole.STUDENT_HS?'THPT':r===UserRole.PARENT?'Phụ Huynh':'Admin'}</button>
               ))}
             </div>
           </div>
-          <button disabled={!canSubmit} onClick={submit} className="mt-6 w-full bg-cyan-600 hover:bg-cyan-700 disabled:bg-slate-400 text-white font-bold py-3 rounded-lg transition">
+          <button disabled={!canSubmit} onClick={submit} className="mt-6 w-full bg-cyan-600 hover:bg-cyan-700 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 disabled:bg-slate-400 disabled:dark:bg-slate-700 text-white font-bold py-3 rounded-lg transition">
             {mode==='register' ? 'Đăng ký' : 'Tiếp tục'}
           </button>
-          <p className="mt-3 text-xs text-slate-500 text-center">Đăng nhập Admin sẽ vào thẳng trang quản trị.</p>
+          <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 text-center">Đăng nhập Admin sẽ vào thẳng trang quản trị.</p>
         </div>
       </div>
     </div>
@@ -591,32 +591,30 @@ const DashboardHeader: React.FC<{
   return (
     <header className="sticky top-0 z-40 py-3">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-14 bg-white/70 backdrop-blur-xl rounded-2xl p-2 shadow-lg shadow-slate-900/5 border border-slate-200">
+        <div className="relative flex items-center justify-between h-14 bg-white/70 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl p-2 shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
           <button onClick={onLogoClick} aria-label="Về Trang chủ" className="flex items-center space-x-2 rounded-full">
             {LANDING_ICONS.logo}
-            <span className="text-xl font-bold text-slate-900">SafeLearn</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">SafeLearn</span>
           </button>
-          <div ref={containerRef} className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center space-x-1 bg-slate-100 p-1 rounded-full antialiased overflow-hidden">
+          <div ref={containerRef} className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-full antialiased overflow-hidden">
             <div
-              className="absolute top-1.5 bottom-1.5 left-0 rounded-full bg-gradient-to-br from-white/70 to-white/30 backdrop-blur-md ring-1 ring-white/50 shadow shadow-slate-900/10 transition-all duration-300 pointer-events-none z-0 overflow-hidden"
+              className="absolute top-1.5 bottom-1.5 left-0 rounded-full bg-gradient-to-br from-white/70 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md ring-1 ring-white/50 dark:ring-white/10 shadow shadow-slate-900/10 transition-all duration-300 pointer-events-none z-0 overflow-hidden"
               style={{ width: `${indicator.width}px`, transform: `translateX(${indicator.x}px)`, willChange: 'transform,width' }}
-            >
-              <div className="absolute inset-x-2 top-1 h-1 rounded-full bg-white/60"></div>
-            </div>
+            />
             {isAdmin ? (
                  <NavButton ref={(el) => (btnRefs.current[View.ADMIN_DASHBOARD] = el)} view={View.ADMIN_DASHBOARD} icon={ICONS.admin} label="Thống kê" />
             ) : (
                 <>
-                    <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
-                    {isStudent && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
-                    <NavButton ref={(el) => (btnRefs.current[View.QA] = el)} view={View.QA} icon={ICONS.qa} label="Hỏi Đáp" />
-                    <NavButton ref={(el) => (btnRefs.current[View.MAP] = el)} view={View.MAP} icon={ICONS.map} label="Bản Đồ" />
+                  <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
+                  {isStudent && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
+                  <NavButton ref={(el) => (btnRefs.current[View.QA] = el)} view={View.QA} icon={ICONS.qa} label="Hỏi Đáp" />
+                  <NavButton ref={(el) => (btnRefs.current[View.MAP] = el)} view={View.MAP} icon={ICONS.map} label="Bản Đồ" />
                 </>
             )}
           </div>
           <div className="flex items-center space-x-2">
             {currentView !== View.PARENT_DASHBOARD && (
-              <div className="bg-slate-100 p-1 rounded-full flex items-center">
+              <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-full flex items-center">
                 {(() => {
                   const base = currentView === View.STUDENT_DASHBOARD
                     ? [UserRole.STUDENT_MS, UserRole.STUDENT_HS]
@@ -626,7 +624,7 @@ const DashboardHeader: React.FC<{
                 })().map(role => (
                   <button key={role}
                       onClick={() => setUserRole(role)}
-                      className={`px-3 py-1.5 text-xs font-bold rounded-full transition-colors duration-300 ${userRole === role ? 'bg-white text-cyan-600 shadow-md' : 'text-slate-500'}`}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-full transition-colors duration-300 ${userRole === role ? 'bg-white dark:bg-slate-900 text-cyan-600 dark:text-white shadow-md' : 'text-slate-500 dark:text-slate-300'}`}
                   >
                      {role === UserRole.STUDENT_MS ? "THCS" : role === UserRole.STUDENT_HS ? "THPT" : role === UserRole.PARENT ? "Phụ Huynh" : "Admin"}
                   </button>
@@ -641,14 +639,14 @@ const DashboardHeader: React.FC<{
 };
 
 const ParentResourceItem: React.FC<{ resource: any }> = ({ resource }) => (
-     <div className="flex items-start space-x-4 p-4 rounded-xl hover:bg-slate-50 transition-colors duration-200">
+     <div className="flex items-start space-x-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-200">
         <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-accent-orange text-white shadow-lg shadow-accent-orange/30">
             {resource.icon}
         </div>
         <div className="flex-grow">
-            <h3 className="font-semibold text-slate-900">{resource.title}</h3>
-            <p className="text-sm text-slate-500">{resource.description}</p>
-            <button className="mt-2 text-sm text-cyan-600 font-semibold hover:underline">Tìm hiểu thêm →</button>
+            <h3 className="font-semibold text-slate-900 dark:text-white">{resource.title}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-300">{resource.description}</p>
+            <button className="mt-2 text-sm text-cyan-600 dark:text-cyan-300 font-semibold hover:underline">Tìm hiểu thêm →</button>
         </div>
     </div>
 );
@@ -675,40 +673,40 @@ const QAPage: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-slate-900 mb-2">Hỏi Đáp Ẩn Danh</h2>
-                <p className="text-lg text-slate-500">Không gian an toàn để bạn hỏi bất cứ điều gì.</p>
+                <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Hỏi Đáp Ẩn Danh</h2>
+                <p className="text-lg text-slate-500 dark:text-slate-300">Không gian an toàn để bạn hỏi bất cứ điều gì.</p>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 mb-12">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700 mb-12">
                 <form onSubmit={handleSubmit}>
                     <textarea
                         id="qa-box"
                         rows={4}
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
-                        className="w-full p-4 bg-slate-100 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition text-slate-900 placeholder-slate-400"
+                        className="w-full p-4 bg-slate-100 dark:bg-slate-900 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
                         placeholder="Ví dụ: Làm sao để từ chối khi bạn bè rủ xem phim người lớn?"
                     ></textarea>
                     {message && (
-                        <p className={`mt-3 text-sm font-medium ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                        <p className={`mt-3 text-sm font-medium ${message.type === 'success' ? 'text-green-600 dark:text-green-300' : 'text-red-600 dark:text-red-400'}`}>
                             {message.text}
                         </p>
                     )}
                     <button 
                         type="submit"
                         disabled={isSubmitting}
-                        className="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 disabled:bg-slate-400"
+                        className="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 disabled:bg-slate-400 disabled:dark:bg-slate-700"
                     >
                         {isSubmitting ? 'Đang gửi...' : 'Gửi câu hỏi'}
                     </button>
                 </form>
             </div>
             <div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 text-center">Câu hỏi phổ biến</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 text-center">Câu hỏi phổ biến</h3>
                 <div className="space-y-4">
                     {QA_DATA.filter(q => q.isPopular).map(q => (
-                        <div key={q.id} className="bg-white p-5 rounded-xl border border-slate-200">
-                            <p className="font-semibold text-cyan-600 mb-1">{q.question}</p>
-                            <p className="text-slate-500 leading-relaxed">{q.answer}</p>
+                        <div key={q.id} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <p className="font-semibold text-cyan-600 dark:text-cyan-300 mb-1">{q.question}</p>
+                            <p className="text-slate-500 dark:text-slate-300 leading-relaxed">{q.answer}</p>
                         </div>
                     ))}
                 </div>
@@ -726,35 +724,35 @@ const MapPage: React.FC = () => {
     return (
         <div className="space-y-4">
              <div className="text-center">
-                <h2 className="text-4xl font-bold text-slate-900 mb-2">Bản Đồ Dịch Vụ</h2>
-                <p className="text-lg text-slate-500">Tìm kiếm các địa điểm hỗ trợ sức khỏe thân thiện và tin cậy.</p>
+                <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Bản Đồ Dịch Vụ</h2>
+                <p className="text-lg text-slate-500 dark:text-slate-300">Tìm kiếm các địa điểm hỗ trợ sức khỏe thân thiện và tin cậy.</p>
             </div>
-            <div className="bg-white p-3 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200">
+            <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
                 <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-250px)]">
-                    <div className="w-full lg:w-2/3 xl:w-3/4 bg-slate-100 rounded-xl relative overflow-hidden">
+                    <div className="w-full lg:w-2/3 xl:w-3/4 bg-slate-100 dark:bg-slate-900 rounded-xl relative overflow-hidden">
                         <img src="https://i.imgur.com/Tf2v2bM.png" alt="Map background" className="absolute inset-0 w-full h-full object-cover"/>
                         {MAP_SERVICES.filter(p => filters.includes(p.type)).map(point => (
                             <button key={point.id} onClick={() => setSelectedPoint(point)} className="absolute transform -translate-x-1/2 -translate-y-1/2 group" style={{ top: point.position.top, left: point.position.left }} aria-label={point.name}>
-                                <div className={`w-5 h-5 rounded-full ${serviceColors[point.type]} ring-4 ring-white/50 group-hover:scale-125 transition-transform duration-300`}></div>
+                                <div className={`w-5 h-5 rounded-full ${serviceColors[point.type]} ring-4 ring-white/50 dark:ring-white/20 group-hover:scale-125 transition-transform duration-300`}></div>
                                 <div className={`absolute inset-0 rounded-full ${serviceColors[point.type]} opacity-50 animate-pulse`}></div>
                             </button>
                         ))}
                     </div>
                     <div className="w-full lg:w-1/3 xl:w-1/4 flex flex-col space-y-4">
-                        <div className="flex flex-wrap gap-2 p-2 bg-slate-100 rounded-lg">
+                        <div className="flex flex-wrap gap-2 p-2 bg-slate-100 dark:bg-slate-900 rounded-lg">
                             {Object.values(MapServiceType).map(type => (
-                                <button key={type} onClick={() => toggleFilter(type)} className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-white text-slate-500 hover:bg-slate-200'}`}>{type}</button>
+                                <button key={type} onClick={() => toggleFilter(type)} className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>{type}</button>
                             ))}
                         </div>
-                        <div className="flex-grow p-4 bg-slate-100 rounded-lg">
+                        <div className="flex-grow p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
                         {selectedPoint ? (
                             <div>
-                                <h4 className="font-bold text-slate-900">{selectedPoint.name}</h4>
-                                <p className="text-sm text-slate-500 mt-1">{selectedPoint.address}</p>
-                                {selectedPoint.friendly === 'teen' && <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-1 rounded-full mt-3 inline-block">Thân thiện vị thành niên</span>}
+                                <h4 className="font-bold text-slate-900 dark:text-white">{selectedPoint.name}</h4>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{selectedPoint.address}</p>
+                                {selectedPoint.friendly === 'teen' && <span className="text-xs font-semibold bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-300 px-2 py-1 rounded-full mt-3 inline-block">Thân thiện vị thành niên</span>}
                             </div>
                         ) : (
-                           <p className="text-sm text-slate-500 text-center mt-8">Chọn một điểm trên bản đồ để xem chi tiết.</p>
+                           <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-8">Chọn một điểm trên bản đồ để xem chi tiết.</p>
                         )}
                         </div>
                     </div>
@@ -790,28 +788,28 @@ const ScenarioPage: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-slate-900 mb-2">Tình Huống Tương Tác</h2>
-                <p className="text-lg text-slate-500">Thực hành kỹ năng qua các tình huống thực tế do AI tạo ra.</p>
+                <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Tình Huống Tương Tác</h2>
+                <p className="text-lg text-slate-500 dark:text-slate-300">Thực hành kỹ năng qua các tình huống thực tế do AI tạo ra.</p>
             </div>
-            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200 min-h-[400px] flex flex-col justify-center items-center">
-                {loading && <div className="text-center text-slate-500">Đang tạo tình huống mới...</div>}
+            <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700 min-h-[400px] flex flex-col justify-center items-center">
+                {loading && <div className="text-center text-slate-500 dark:text-slate-400">Đang tạo tình huống mới...</div>}
                 {error && <p className="text-red-500">{error}</p>}
                 {scenario && !loading && (
                     <div className="w-full">
-                        <h3 className="text-2xl font-bold text-cyan-600 text-center">{scenario.title}</h3>
-                        <p className="text-slate-600 my-6 text-center leading-relaxed">{scenario.situation}</p>
+                        <h3 className="text-2xl font-bold text-cyan-600 dark:text-cyan-300 text-center">{scenario.title}</h3>
+                        <p className="text-slate-600 dark:text-slate-300 my-6 text-center leading-relaxed">{scenario.situation}</p>
                         <div className="space-y-4">
                             {scenario.options.map((option, index) => (
                                 <div key={index}>
                                     <button
                                         onClick={() => setSelectedOption(index)}
                                         disabled={selectedOption !== null}
-                                        className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-300 ${selectedOption === index ? 'border-cyan-500 bg-cyan-50' : 'border-slate-200 hover:border-cyan-400 hover:bg-slate-50'} disabled:cursor-not-allowed`}
+                                        className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-300 ${selectedOption === index ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-500/10' : 'border-slate-200 dark:border-slate-700 hover:border-cyan-400 hover:bg-slate-50 dark:hover:bg-slate-800'} disabled:cursor-not-allowed`}
                                     >
                                         {option.text}
                                     </button>
                                     {selectedOption === index && (
-                                        <div className="p-4 mt-2 bg-slate-100 rounded-lg text-slate-700 border-l-4 border-cyan-500">
+                                        <div className="p-4 mt-2 bg-slate-100 dark:bg-slate-900 rounded-lg text-slate-700 dark:text-slate-300 border-l-4 border-cyan-500 dark:border-cyan-700">
                                             <p className="font-semibold mb-1">Phản hồi:</p>
                                             <p>{option.feedback}</p>
                                         </div>
@@ -824,7 +822,7 @@ const ScenarioPage: React.FC = () => {
                 <button
                     onClick={handleGenerateScenario}
                     disabled={loading}
-                    className="mt-8 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:bg-slate-400 flex items-center space-x-2"
+                    className="mt-8 bg-cyan-500 hover:bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:bg-slate-400 disabled:dark:bg-slate-700 flex items-center space-x-2"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" /></svg>
                     <span>{selectedOption !== null ? 'Tạo tình huống khác' : 'Tạo tình huống mới'}</span>
@@ -835,13 +833,13 @@ const ScenarioPage: React.FC = () => {
 };
 const RoadmapPath = () => (
     <div className="absolute inset-0 flex justify-center items-center overflow-hidden">
-        <svg width="400" height="800" viewBox="0 0 400 800" className="w-full h-full">
-            <path d="M 240 40 C 240 100, 150 100, 150 160 S 260 220, 260 280 S 150 340, 150 400 S 250 460, 250 520 S 160 580, 160 640 S 230 700, 230 760" stroke="#E2E8F0" fill="none" strokeWidth="8" strokeLinecap="round" strokeDasharray="20 15" />
+        <svg width="400" height="800" viewBox="0 0 400 800" className="w-full h-full text-slate-200 dark:text-cyan-500/30">
+            <path d="M 240 40 C 240 100, 150 100, 150 160 S 260 220, 260 280 S 150 340, 150 400 S 250 460, 250 520 S 160 580, 160 640 S 230 700, 230 760" stroke="currentColor" fill="none" strokeWidth="8" strokeLinecap="round" strokeDasharray="20 15" />
             <g transform="translate(180, 250) scale(0.5)">
-                <path d="M84.1,64.3C83.2,61.5,82.2,58.7,81.1,56c-2-5.1-4.8-9.8-8.2-13.8c-2.2-2.6-4.6-5-7.3-7c-5-3.6-11-5.7-17.5-5.7c-6.2,0-12,1.9-16.9,5.4c-4.9,3.5-8.2,8.4-9.6,14.1c-1.2,4.6-1.5,9.4-1,14.1c0.5,5.1,1.8,10.1,3.8,14.7c1.7,3.9,3.8,7.6,6.3,10.9c2.5,3.3,5.4,6.2,8.6,8.6c3.2,2.4,6.8,4.2,10.5,5.3" fill="none" stroke="#F1F5F9" strokeWidth="4" strokeLinecap="round" strokeMiterlimit="10"/>
+                <path d="M84.1,64.3C83.2,61.5,82.2,58.7,81.1,56c-2-5.1-4.8-9.8-8.2-13.8c-2.2-2.6-4.6-5-7.3-7c-5-3.6-11-5.7-17.5-5.7c-6.2,0-12,1.9-16.9,5.4c-4.9,3.5-8.2,8.4-9.6,14.1c-1.2,4.6-1.5,9.4-1,14.1c0.5,5.1,1.8,10.1,3.8,14.7c1.7,3.9,3.8,7.6,6.3,10.9c2.5,3.3,5.4,6.2,8.6,8.6c3.2,2.4,6.8,4.2,10.5,5.3" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeMiterlimit="10"/>
             </g>
              <g transform="translate(250, 550) scale(0.4) rotate(180)">
-                <path d="M84.1,64.3C83.2,61.5,82.2,58.7,81.1,56c-2-5.1-4.8-9.8-8.2-13.8c-2.2-2.6-4.6-5-7.3-7c-5-3.6-11-5.7-17.5-5.7c-6.2,0-12,1.9-16.9,5.4c-4.9,3.5-8.2,8.4-9.6,14.1c-1.2,4.6-1.5,9.4-1,14.1c0.5,5.1,1.8,10.1,3.8,14.7c1.7,3.9,3.8,7.6,6.3,10.9c2.5,3.3,5.4,6.2,8.6,8.6c3.2,2.4,6.8,4.2,10.5,5.3" fill="none" stroke="#F1F5F9" strokeWidth="4" strokeLinecap="round" strokeMiterlimit="10"/>
+                <path d="M84.1,64.3C83.2,61.5,82.2,58.7,81.1,56c-2-5.1-4.8-9.8-8.2-13.8c-2.2-2.6-4.6-5-7.3-7c-5-3.6-11-5.7-17.5-5.7c-6.2,0-12,1.9-16.9,5.4c-4.9,3.5-8.2,8.4-9.6,14.1c-1.2,4.6-1.5,9.4-1,14.1c0.5,5.1,1.8,10.1,3.8,14.7c1.7,3.9,3.8,7.6,6.3,10.9c2.5,3.3,5.4,6.2,8.6,8.6c3.2,2.4,6.8,4.2,10.5,5.3" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeMiterlimit="10"/>
             </g>
         </svg>
     </div>
@@ -894,7 +892,7 @@ const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
         
         return (
             <div className={`absolute transform -translate-x-1/2 -translate-y-1/2 group ${isCurrent ? 'animate-floating z-10' : ''}`} style={{ top: item.position.top, left: item.position.left }}>
-                 <p className={`absolute bottom-full mb-4 w-40 text-center text-sm font-semibold text-slate-600 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1`}>{item.title}</p>
+                <p className={`absolute bottom-full mb-4 w-40 text-center text-sm font-semibold text-slate-600 dark:text-slate-300 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1`}>{item.title}</p>
                  <button className={`${buttonClasses} ${isBadge ? 'w-20 h-20' : 'w-16 h-16'}`}>
                     <span className={`absolute inset-0 rounded-full ${style.bottom} transform translate-y-1.5`}></span>
                     <span className={`absolute inset-0 rounded-full flex items-center justify-center ${style.base} shadow-inner shadow-white/20 ${isCurrent ? 'animate-glowing' : ''}`}>
@@ -908,31 +906,31 @@ const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
     };
 
     const CourseModuleCard: React.FC<{ module: CourseModule }> = ({ module }) => (
-        <div className="bg-slate-50 p-4 rounded-xl flex items-center space-x-4 border border-slate-200/50 hover:bg-white hover:shadow-lg hover:border-slate-200 transition-all duration-300">
-            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-cyan-100 text-cyan-500">{module.icon}</div>
+        <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl flex items-center space-x-4 border border-slate-200/50 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 hover:shadow-lg hover:border-slate-200 dark:hover:border-slate-600 transition-all duration-300">
+            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-cyan-100 dark:bg-cyan-500/10 text-cyan-500">{module.icon}</div>
             <div className="flex-grow">
-                <h4 className="font-bold text-slate-800">{module.title}</h4>
-                <div className="w-full bg-slate-200 rounded-full h-2 mt-2">
-                    <div className="bg-cyan-500 h-2 rounded-full" style={{ width: `${module.progress}%` }}></div>
+                <h4 className="font-bold text-slate-800 dark:text-white">{module.title}</h4>
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mt-2">
+                    <div className="bg-cyan-500 h-2 rounded-full dark:shadow-[0_0_12px_rgba(6,182,212,0.45)]" style={{ width: `${module.progress}%` }}></div>
                 </div>
             </div>
-            <span className="font-bold text-cyan-500 text-sm">{module.progress}%</span>
+            <span className="font-bold text-cyan-500 dark:text-cyan-300 text-sm">{module.progress}%</span>
         </div>
     );
     
     return (
         <div className="grid lg:grid-cols-3 xl:grid-cols-4 gap-8 items-start">
             <div className="lg:col-span-2 xl:col-span-3 space-y-8">
-                <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200">
-                     <h2 className="text-3xl font-bold text-slate-900 mb-1">Khóa học của bạn</h2>
-                     <p className="text-slate-500 mb-6">Hãy cùng khám phá những kiến thức bổ ích nhé!</p>
+                <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+                     <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Khóa học của bạn</h2>
+                     <p className="text-slate-500 dark:text-slate-300 mb-6">Hãy cùng khám phá những kiến thức bổ ích nhé!</p>
                      <div className="grid md:grid-cols-2 gap-4">
                         {courses.map(course => <CourseModuleCard key={course.id} module={course} />)}
                      </div>
                 </div>
-                 <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-1">Lộ trình Khám phá</h2>
-                    <p className="text-slate-500 mb-8">Hoàn thành các bài học để nhận huy hiệu và thăng hạng!</p>
+                 <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Lộ trình Khám phá</h2>
+                    <p className="text-slate-500 dark:text-slate-300 mb-8">Hoàn thành các bài học để nhận huy hiệu và thăng hạng!</p>
                     <div className="relative w-full h-[800px]">
                         <RoadmapPath />
                         {roadmap.map((item) => (
@@ -942,8 +940,8 @@ const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
                 </div>
             </div>
             <div className="lg:col-span-1 xl:col-span-1 space-y-6">
-                <div className="bg-white p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200">
-                    <h3 className="font-bold text-xl text-slate-900 mb-4">Bảng xếp hạng</h3>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+                    <h3 className="font-bold text-xl text-slate-900 dark:text-white mb-4">Bảng xếp hạng</h3>
                      <div className="space-y-3">
                         {LEADERBOARD_DATA.map((user, index) => {
                              const rankStyles: { [key: number]: string } = {
@@ -951,12 +949,12 @@ const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
                                 1: 'border-slate-300',
                                 2: 'border-yellow-600/70',
                             };
-                            return (
-                                <div key={user.id} className={`flex items-center p-3 rounded-lg ${user.isCurrentUser ? 'bg-cyan-100 border-2 border-cyan-500' : 'bg-slate-50'}`}>
-                                    <span className="font-bold text-slate-400 text-sm w-6 text-center">{index + 1}</span>
+                             return (
+                                <div key={user.id} className={`flex items-center p-3 rounded-lg ${user.isCurrentUser ? 'bg-cyan-100 dark:bg-cyan-500/10 border-2 border-cyan-500 dark:border-cyan-700' : 'bg-slate-50 dark:bg-slate-900'}`}>
+                                    <span className="font-bold text-slate-400 dark:text-slate-500 text-sm w-6 text-center">{index + 1}</span>
                                     <img src={user.avatar} alt={user.name} className={`w-10 h-10 rounded-full mx-3 border-2 ${rankStyles[index] || 'border-transparent'}`} />
-                                    <p className={`flex-grow font-semibold ${user.isCurrentUser ? 'text-cyan-600' : 'text-slate-800'}`}>{user.name}</p>
-                                    <p className="font-bold text-sm text-slate-500">{user.xp} XP</p>
+                                    <p className={`flex-grow font-semibold ${user.isCurrentUser ? 'text-cyan-600 dark:text-cyan-300' : 'text-slate-800 dark:text-slate-300'}`}>{user.name}</p>
+                                    <p className="font-bold text-sm text-slate-500 dark:text-slate-400">{user.xp} XP</p>
                                 </div>
                             )
                         })}
@@ -969,18 +967,18 @@ const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
 
 const ParentDashboard: React.FC<{setView: (view: View) => void;}> = ({setView}) => (
      <div className="grid lg:grid-cols-5 gap-8 items-start">
-        <div className="lg:col-span-3 bg-white p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 border border-slate-200">
-            <h2 className="text-3xl font-bold text-slate-900 mb-1">Công cụ cho Phụ huynh</h2>
-            <p className="text-slate-500 mb-4">Đồng hành và trò chuyện cởi mở cùng con.</p>
-            <div className="divide-y divide-slate-200 -mx-4 sm:-mx-6">
+        <div className="lg:col-span-3 bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Công cụ cho Phụ huynh</h2>
+            <p className="text-slate-500 dark:text-slate-300 mb-4">Đồng hành và trò chuyện cởi mở cùng con.</p>
+            <div className="divide-y divide-slate-200 dark:divide-slate-700 -mx-4 sm:-mx-6">
                 {PARENT_RESOURCES.map(res => <ParentResourceItem key={res.id} resource={res} />)}
             </div>
         </div>
         <div className="lg:col-span-2">
-           <div onClick={() => setView(View.QA)} className="bg-white p-6 rounded-2xl shadow-xl shadow-slate-900/5 border-2 border-dashed border-slate-200 hover:border-cyan-500 transition-colors duration-300 cursor-pointer text-center">
+           <div onClick={() => setView(View.QA)} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-cyan-500 hover:dark:border-cyan-400 transition-colors duration-300 cursor-pointer text-center">
                 <div className="text-cyan-500 text-4xl mb-3 flex justify-center">{ICONS.question}</div>
-                <h3 className="font-bold text-lg text-slate-900">Những điều con băn khoăn</h3>
-                <p className="text-slate-500 mt-1 text-sm">Đọc các câu hỏi phổ biến (ẩn danh) để hiểu hơn về suy nghĩ của con trẻ.</p>
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">Những điều con băn khoăn</h3>
+                <p className="text-slate-500 dark:text-slate-300 mt-1 text-sm">Đọc các câu hỏi phổ biến (ẩn danh) để hiểu hơn về suy nghĩ của con trẻ.</p>
             </div>
         </div>
     </div>
@@ -988,12 +986,12 @@ const ParentDashboard: React.FC<{setView: (view: View) => void;}> = ({setView}) 
 
 const AdminDashboard: React.FC = () => {
     const StatCard: React.FC<{ title: string; value: string; change: number; icon: React.ReactNode; color: string; }> = ({ title, value, change, icon, color }) => (
-        <div className="bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-slate-500">{title}</p>
-                <div className={`w-8 h-8 flex items-center justify-center rounded-full ${color}/20 text-${color}`}>{icon}</div>
+                <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">{title}</p>
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full ${color}/20 text-${color} ring-1 ring-slate-200 dark:ring-white/10 dark:bg-white/10`}>{icon}</div>
             </div>
-            <p className="text-3xl font-bold text-slate-900 mt-2">{value}</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{value}</p>
             <div className={`flex items-center mt-1 text-sm font-semibold ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                 {change >= 0 ? '▲' : '▼'} {Math.abs(change)}% so với tháng trước
             </div>
@@ -1002,7 +1000,7 @@ const AdminDashboard: React.FC = () => {
 
     return (
         <div className="space-y-8">
-            <h2 className="text-4xl font-bold text-slate-900">Bảng điều khiển Admin</h2>
+            <h2 className="text-4xl font-bold text-slate-900 dark:text-white">Bảng điều khiển Admin</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* FIX: Replaced non-existent ICONS.users with ICONS.body */}
                 <StatCard title="Tổng số học sinh" value={ADMIN_STATS_DATA.totalStudents.value.toLocaleString('vi-VN')} change={ADMIN_STATS_DATA.totalStudents.change} icon={ICONS.users} color="cyan-500" />
@@ -1012,24 +1010,24 @@ const AdminDashboard: React.FC = () => {
                 <StatCard title="Mức độ tương tác" value={`${ADMIN_STATS_DATA.engagementRate.value}%`} change={ADMIN_STATS_DATA.engagementRate.change} icon={ICONS.heart} color="red-500" />
             </div>
             <div className="grid lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">Tiến độ hoàn thành Module</h3>
+                <div className="lg:col-span-3 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Tiến độ hoàn thành Module</h3>
                     <div className="space-y-4">
                         {MODULE_COMPLETION_DATA.map(module => (
                             <div key={module.id}>
-                                <div className="flex justify-between text-sm font-semibold text-slate-600 mb-1">
+                                <div className="flex justify-between text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">
                                     <span>{module.title}</span>
                                     <span>{module.completion}%</span>
                                 </div>
-                                <div className="w-full bg-slate-200 rounded-full h-2.5">
+                                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
                                     <div className="bg-cyan-500 h-2.5 rounded-full" style={{ width: `${module.completion}%` }}></div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg shadow-slate-900/5 border border-slate-200">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">Phân bổ người dùng</h3>
+                <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Phân bổ người dùng</h3>
                     <div className="space-y-3">
                          {USER_DISTRIBUTION_DATA.map((item, index) => {
                              const colors = ['bg-cyan-500', 'bg-accent-purple', 'bg-accent-orange'];
@@ -1037,11 +1035,11 @@ const AdminDashboard: React.FC = () => {
                              const percentage = ((item.count / total) * 100).toFixed(1);
                              return (
                                  <div key={item.role}>
-                                    <div className="flex justify-between font-semibold text-slate-800">
+                                    <div className="flex justify-between font-semibold text-slate-800 dark:text-slate-300">
                                         <span>{item.role}</span>
                                         <span>{item.count.toLocaleString('vi-VN')}</span>
                                     </div>
-                                    <div className="w-full bg-slate-200 rounded-full h-2.5 mt-1">
+                                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 mt-1">
                                          <div className={`${colors[index % colors.length]} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div>
                                     </div>
                                 </div>
@@ -1087,7 +1085,7 @@ const MainApp: React.FC<{
   }
 
   return (
-    <div className="min-h-screen font-sans bg-slate-50 text-slate-900">
+    <div className="min-h-screen font-sans bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
       <DashboardHeader 
         currentView={currentView}
         userRole={userRole} 
@@ -1111,6 +1109,12 @@ export default function App() {
   const [currentView, setCurrentView] = useState<View>(View.STUDENT_DASHBOARD);
   const [showSplash, setShowSplash] = useState(true);
   const [username, setUsername] = useState<string>('');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    const dark = saved === 'dark';
+    document.documentElement.classList.toggle('dark', dark);
+  }, []);
 
   useEffect(() => {
     const onPop = (e: PopStateEvent) => {
