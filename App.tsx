@@ -478,7 +478,11 @@ const AuthPage: React.FC<{
               <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300 group-hover:text-slate-900 dark:group-hover:text-white">Chuyên gia hỗ trợ</p>
             </div>
             <div className="group p-3 rounded-2xl bg-white/60 dark:bg-white/10 backdrop-blur transition-all duration-300 hover:bg-white/80 dark:hover:bg-white/20 hover:shadow-xl hover:-translate-y-1">
-              <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-white/20 flex items-center justify-center text-accent-purple ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 group-hover:ring-purple-300 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.35)]">{LANDING_ICONS.interactive}</div>
+              <div className="w-9 h-9 rounded-full bg-white/80 dark:bg-white/20 flex items-center justify-center text-accent-purple ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 group-hover:ring-purple-300 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.35)]">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                </svg>
+              </div>
               <p className="mt-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300 group-hover:text-slate-900 dark:group-hover:text-white">Tương tác dễ hiểu</p>
             </div>
           </div>
