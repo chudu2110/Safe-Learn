@@ -34,7 +34,7 @@ export const TestimonialsCarousel: React.FC<{ items: Testimonial[]; intervalMs?:
   }, [step, intervalMs]);
 
   return (
-    <div className="mt-12 pt-4 overflow-x-hidden overflow-y-visible" ref={containerRef}>
+    <div className="mt-12 pt-4 overflow-x-hidden overflow-y-hidden" ref={containerRef}>
       <div className="flex gap-8">
         {items.map((it, idx) => (
           <div key={idx} className="testimonial-card bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg shadow-slate-900/5 dark:shadow-[0_0_12px_rgba(15,23,42,0.35)] scroll-animate transition-transform duration-300 filter hover:brightness-105 hover:-translate-y-1 hover:shadow-xl hover:border-cyan-200 dark:hover:border-cyan-400 hover:z-10 min-w-[320px] md:min-w-[420px]">

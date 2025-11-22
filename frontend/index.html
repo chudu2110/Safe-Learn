@@ -7,6 +7,17 @@
     <title>SafeLearn - Giáo dục giới tính an toàn</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>
+      (function(){
+        try {
+          var saved = localStorage.getItem('theme');
+          var dark = saved === 'dark';
+          document.documentElement.classList.toggle('dark', dark);
+        } catch(e) {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
