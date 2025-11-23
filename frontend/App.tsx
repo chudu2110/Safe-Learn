@@ -13,7 +13,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 
 export default function App() {
   const AUTH_DISABLED = ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === 'true') || ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === '1');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(AUTH_DISABLED);
   const [userRole, setUserRole] = useState<UserRole>(UserRole.STUDENT_MS);
   const [currentView, setCurrentView] = useState<View>(View.STUDENT_DASHBOARD);
   const [showSplash, setShowSplash] = useState(true);
@@ -39,7 +39,7 @@ export default function App() {
       }
     };
     window.addEventListener('popstate', onPop);
-    window.history.replaceState({ login: false, role: UserRole.STUDENT_MS, view: View.STUDENT_DASHBOARD }, '');
+    window.history.replaceState({ login: AUTH_DISABLED, role: UserRole.STUDENT_MS, view: View.STUDENT_DASHBOARD }, '');
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 

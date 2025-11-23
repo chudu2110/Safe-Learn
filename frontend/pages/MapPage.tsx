@@ -27,7 +27,10 @@ export const MapPage: React.FC = () => {
   const onPosition = useCallback((lat: number, lng: number) => { setUserPos([lat, lng]); }, []);
   const toggleFilter = (filter: MapServiceType) => { setFilters(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]); };
   const serviceColors: Record<MapServiceType, string> = {
-    [MapServiceType.GYNECOLOGY]: 'bg-accent-purple', [MapServiceType.ANDROLOGY]: 'bg-cyan-500', [MapServiceType.COUNSELING]: 'bg-accent-orange', [MapServiceType.HOTLINE]: 'bg-red-500',
+    [MapServiceType.GYNECOLOGY]: 'bg-accent-purple',
+    [MapServiceType.ANDROLOGY]: 'bg-cyan-500',
+    [MapServiceType.COUNSELING]: 'bg-accent-orange',
+    [MapServiceType.HOTLINE]: 'bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500',
   };
   const locateMe = async () => {
     if (userPos && mapRef.current) { mapRef.current.setView(userPos, 15, { animate: true }); return; }
@@ -55,6 +58,79 @@ export const MapPage: React.FC = () => {
     if (!query) return;
     setLoading(true);
     try {
+      // Fast path: direct Nominatim search with user input
+      try {
+        const params = new URLSearchParams();
+        params.set('format', 'jsonv2');
+        params.set('addressdetails', '1');
+        params.set('limit', '5');
+        params.set('countrycodes', 'vn');
+        params.set('q', `${query} Việt Nam`);
+        const resDirect = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, { headers: { 'accept-language': 'vi' } });
+        const dataDirect = await resDirect.json();
+        if (Array.isArray(dataDirect) && dataDirect.length > 0) {
+          const best = dataDirect[0];
+          const lat = parseFloat(best.lat);
+          const lon = parseFloat(best.lon);
+          if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+            setSearchPos([lat, lon]);
+            if (mapRef.current) mapRef.current.setView([lat, lon], 16, { animate: true });
+            setLoading(false);
+            setShowSug(false);
+            return;
+          }
+        }
+      } catch {}
+
+      // Fallback 1: direct query without country suffix
+      try {
+        const p2 = new URLSearchParams();
+        p2.set('format', 'jsonv2');
+        p2.set('addressdetails', '1');
+        p2.set('limit', '5');
+        p2.set('countrycodes', 'vn');
+        p2.set('q', query);
+        const r2 = await fetch(`https://nominatim.openstreetmap.org/search?${p2.toString()}`, { headers: { 'accept-language': 'vi' } });
+        const d2 = await r2.json();
+        if (Array.isArray(d2) && d2.length > 0) {
+          const best = d2[0];
+          const lat = parseFloat(best.lat);
+          const lon = parseFloat(best.lon);
+          if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+            setSearchPos([lat, lon]);
+            if (mapRef.current) mapRef.current.setView([lat, lon], 16, { animate: true });
+            setLoading(false);
+            setShowSug(false);
+            return;
+          }
+        }
+      } catch {}
+
+      // Fallback 2: normalized query without diacritics
+      try {
+        const nrm = query.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const p3 = new URLSearchParams();
+        p3.set('format', 'jsonv2');
+        p3.set('addressdetails', '1');
+        p3.set('limit', '5');
+        p3.set('countrycodes', 'vn');
+        p3.set('q', `${nrm} Viet Nam`);
+        const r3 = await fetch(`https://nominatim.openstreetmap.org/search?${p3.toString()}`);
+        const d3 = await r3.json();
+        if (Array.isArray(d3) && d3.length > 0) {
+          const best = d3[0];
+          const lat = parseFloat(best.lat);
+          const lon = parseFloat(best.lon);
+          if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+            setSearchPos([lat, lon]);
+            if (mapRef.current) mapRef.current.setView([lat, lon], 16, { animate: true });
+            setLoading(false);
+            setShowSug(false);
+            return;
+          }
+        }
+      } catch {}
+
       const vnBox = '102.14,23.39,109.46,8.18';
       const n = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const parts = query.split(',').map(p => p.trim()).filter(Boolean);
@@ -117,7 +193,8 @@ export const MapPage: React.FC = () => {
         if (!vbox) vbox = vnBox;
         params.set('viewbox', vbox);
         params.set('bounded', '1');
-        params.set('q', `${street ? street + ' ' : ''}${county ? county + ' ' : ''}${city ? city + ' ' : ''}${state ? state + ' ' : ''}`.trim() || `${query} Việt Nam`);
+        const mainPhrase = parts.length >= 2 ? parts[0] : query;
+        params.set('q', mainPhrase || `${query} Việt Nam`);
         res = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, { headers: { 'accept-language': 'vi' } });
         data = await res.json();
       }
@@ -258,9 +335,18 @@ export const MapPage: React.FC = () => {
           const cLat = el.lat ?? el.center?.lat;
           const cLon = el.lon ?? el.center?.lon;
           const dist = userPos ? distKm([cLat, cLon], userPos) : Number.POSITIVE_INFINITY;
-          const name = el.tags?.name || el.tags?.official_name || el.tags?.short_name || '';
-          return { lat: cLat, lon: cLon, dist, name, address: name, tags: el.tags };
-        }).filter(it => Number.isFinite(it.dist));
+          const tags = el.tags || {};
+          const name = tags.name || tags.official_name || tags.short_name || '';
+          const house = tags['addr:housenumber'] || '';
+          const street = tags['addr:street'] || '';
+          const district = tags['addr:district'] || '';
+          const city = tags['addr:city'] || '';
+          const state = tags['addr:state'] || '';
+          const addrLine1 = [house, street].filter(Boolean).join(' ').trim();
+          const addressParts = [addrLine1, district, city, state].filter((p) => typeof p === 'string' && p.trim().length > 0);
+          const address = addressParts.join(', ');
+          return { lat: cLat, lon: cLon, dist, name, address, tags };
+        }).filter(it => Number.isFinite(it.dist) && ((it.name && it.name.trim().length > 0) || (it.address && it.address.trim().length > 0)));
         let matched = list.filter(it => active.some(t => matchCat(it.tags, t, it.name))).filter(it => it.dist <= RADIUS_KM).sort((a,b) => a.dist - b.dist);
         if (matched.length === 0) {
           matched = list.filter(it => it.dist <= RADIUS_KM).sort((a,b) => a.dist - b.dist);
@@ -287,8 +373,9 @@ export const MapPage: React.FC = () => {
                 const cLat = parseFloat(it.lat);
                 const cLon = parseFloat(it.lon);
                 const dist = userPos ? distKm([cLat, cLon], userPos) : Number.POSITIVE_INFINITY;
-                if (Number.isFinite(dist) && dist <= RADIUS_KM) {
-                  seen.push({ lat: cLat, lon: cLon, dist, name: it.display_name || 'Địa điểm', address: it.display_name });
+                const display = typeof it.display_name === 'string' ? it.display_name : '';
+                if (display && Number.isFinite(dist) && dist <= RADIUS_KM) {
+                  seen.push({ lat: cLat, lon: cLon, dist, name: display, address: display });
                 }
               }
             }
@@ -407,7 +494,12 @@ export const MapPage: React.FC = () => {
               {catsOpen && (
                 <div className="flex flex-wrap gap-2 p-2">
                   {Object.values(MapServiceType).map(type => (
-                    <button key={type} onClick={() => toggleFilter(type)} className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>{type}</button>
+                    <button key={type} onClick={() => toggleFilter(type)} className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow flex items-center justify-center gap-2 ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                      <span>{type}</span>
+                      {type === MapServiceType.HOTLINE && (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.86 19.86 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.86 19.86 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.23 1.54.72 3.04 1.44 4.39a2 2 0 01-.45 2.11L9 11a16 16 0 006 6l.78-1.11a2 2 0 012.1-.45 12.4 12.4 0 004.39 1.44A2 2 0 0122 16.92z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      )}
+                    </button>
                   ))}
                 </div>
               )}
@@ -421,33 +513,26 @@ export const MapPage: React.FC = () => {
                     <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Hotline quốc gia</h4>
                       <div className="flex flex-col gap-2">
-                        <a href="tel:111" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-red-500 text-white hover:bg-red-600">
+                        <a href="tel:111" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md hover:brightness-110">
                           <span>111 — Bảo vệ trẻ em</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-red-500 text-white hover:bg-red-600">
+                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md hover:brightness-110">
                           <span>1800 1768 — Bảo vệ phụ nữ/trẻ em (UNFPA)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-cyan-500 text-white hover:bg-cyan-600">
+                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-md hover:brightness-110">
                           <span>1900 9095 — Bộ Y tế</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-slate-800 text-white hover:bg-slate-700">
+                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:brightness-110">
                           <span>024 3333 55 99 — CSAGA (Giới, Gia đình, Vị thành niên)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-slate-800 text-white hover:bg-slate-700">
+                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md hover:brightness-110">
                           <span>(84-4) 3577 0261 — CCIHP (Sáng kiến Sức khỏe và Dân số)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-accent-orange text-white hover:brightness-110">
+                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md hover:brightness-110">
                           <span>096 306 1414 — Tư vấn tâm lý “Ngày Mai”</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-accent-purple text-white hover:brightness-110">
+                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-xl px-4 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md hover:brightness-110">
                           <span>1900 9204 — BlueBlue Hotline (tâm lý cho thanh thiếu niên)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
                       </div>
                     </div>
@@ -470,7 +555,7 @@ export const MapPage: React.FC = () => {
                     )
                   ) : (
                     (() => {
-                      const base = MAP_SERVICES.filter(sp => filters.includes(sp.type));
+                      const base = MAP_SERVICES.filter(sp => filters.includes(sp.type)).filter(sp => sp.type !== MapServiceType.HOTLINE);
                       return (
                         <div className="divide-y divide-slate-200 dark:divide-slate-700">
                           {base.map(sp => (
