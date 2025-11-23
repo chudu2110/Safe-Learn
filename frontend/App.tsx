@@ -121,11 +121,11 @@ export default function App() {
         />
       );
     }
-    return <LandingPageExternal onNavigate={handleNavigate} />;
+    return <LandingPageExternal onNavigate={handleNavigate} userRole={userRole} />;
   }
 
   if (currentView === View.HOME) {
-    return <LandingPageExternal onNavigate={handleNavigate} isLoggedIn={true} userName={username} />;
+    return <LandingPageExternal onNavigate={handleNavigate} isLoggedIn={true} userName={username} userRole={userRole} />;
   }
 
   const isStudent = userRole === UserRole.STUDENT_MS || userRole === UserRole.STUDENT_HS;
