@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { LANDING_ICONS, ICONS } from '../constants';
-import { UserRole } from '../types';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { LandingHeader } from '../components/LandingHeader';
 import { LandingIllustration } from '../components/LandingIllustration';
@@ -8,7 +7,7 @@ import { ContactForm } from '../components/ContactForm';
 import { CountUp } from '../components/CountUp';
 import { TestimonialsCarousel } from '../components/TestimonialsCarousel';
 
-export const LandingPage: React.FC<{ onNavigate: (target: string) => void; isLoggedIn?: boolean; userName?: string; userRole?: UserRole }> = ({ onNavigate, isLoggedIn = false, userName, userRole }) => {
+export const LandingPage: React.FC<{ onNavigate: (target: string) => void; isLoggedIn?: boolean; userName?: string; onLogout?: () => void }> = ({ onNavigate, isLoggedIn = false, userName, onLogout }) => {
   useScrollAnimation();
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, []);
   const [showTag, setShowTag] = useState(false);
@@ -34,7 +33,7 @@ export const LandingPage: React.FC<{ onNavigate: (target: string) => void; isLog
 
   return (
     <div className="bg-slate-50 dark:bg-slate-900 dark:text-slate-100 font-sans">
-        <LandingHeader onNavigate={onNavigate} isLoggedIn={isLoggedIn} userName={userName} userRole={userRole} isDark={isDark} onToggleDark={toggleDark} />
+        <LandingHeader onNavigate={onNavigate} isLoggedIn={isLoggedIn} userName={userName} isDark={isDark} onToggleDark={toggleDark} onLogout={onLogout} />
         <main>
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -60,19 +59,9 @@ export const LandingPage: React.FC<{ onNavigate: (target: string) => void; isLog
                 </div>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                {isLoggedIn ? (
-                  userRole === UserRole.PARENT ? (
-                    <button onClick={() => onNavigate('Phụ huynh')} className="flex items-center justify-center text-base font-bold text-white bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-6 py-3 rounded-lg hover:bg-cyan-700 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors shadow-lg shadow-cyan-600/30">Vào trang Phụ huynh</button>
-                  ) : (
-                    <button onClick={() => onNavigate('Khóa học')} className="flex items-center justify-center text-base font-bold text-white bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-6 py-3 rounded-lg hover:bg-cyan-700 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors shadow-lg shadow-cyan-600/30">
-                      Xin chào, {userName || 'bạn'}
-                    </button>
-                  )
-                ) : (
-                  <button onClick={() => onNavigate('Bắt đầu học')} className="flex items-center justify-center text-base font-bold text-white bg-cyan-500 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-6 py-3 rounded-lg hover:bg-cyan-600 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors shadow-lg shadow-cyan-500/30">
-                    Bắt đầu học ngay {LANDING_ICONS.arrow}
-                  </button>
-                )}
+                <button onClick={() => onNavigate('Bắt đầu học')} className="flex items-center justify-center text-base font-bold text-white bg-cyan-500 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-6 py-3 rounded-lg hover:bg-cyan-600 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors shadow-lg shadow-cyan-500/30">
+                  Bắt đầu học ngay {LANDING_ICONS.arrow}
+                </button>
                 <button onClick={() => onNavigate('Dành cho phụ huynh')} className="text-base font-bold text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 px-6 py-3 rounded-lg hover:bg-slate-100 hover:dark:bg-slate-700 transition-colors border-2 border-slate-200 dark:border-slate-700">
                   Dành cho phụ huynh
                 </button>

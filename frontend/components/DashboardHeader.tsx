@@ -77,7 +77,7 @@ export const DashboardHeader: React.FC<{
             )}
           </div>
           <div className="flex items-center space-x-2">
-            {currentView !== View.PARENT_DASHBOARD && (
+            {!isParent && (
               <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-full flex items-center">
                 {(() => {
                   const base = [UserRole.STUDENT_MS, UserRole.STUDENT_HS];

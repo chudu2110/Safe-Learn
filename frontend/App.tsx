@@ -13,11 +13,12 @@ import { AdminDashboard } from './pages/AdminDashboard';
 
 export default function App() {
   const AUTH_DISABLED = ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === 'true') || ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === '1');
-  const [isLoggedIn, setIsLoggedIn] = useState(AUTH_DISABLED);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<UserRole>(UserRole.STUDENT_MS);
   const [currentView, setCurrentView] = useState<View>(View.STUDENT_DASHBOARD);
   const [showSplash, setShowSplash] = useState(true);
   const [username, setUsername] = useState<string>('');
+  const APP_STATE_KEY = 'safelearn_app_state';
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
@@ -33,13 +34,41 @@ export default function App() {
         setUserRole(s.role);
         setCurrentView(s.view);
       } else {
-        setIsLoggedIn(false);
-        setUserRole(UserRole.STUDENT_MS);
-        setCurrentView(View.STUDENT_DASHBOARD);
+        const savedRaw = localStorage.getItem(APP_STATE_KEY);
+        if (savedRaw) {
+          try {
+            const saved = JSON.parse(savedRaw) as { login: boolean; role: UserRole; view: View };
+            setIsLoggedIn(saved.login);
+            setUserRole(saved.role);
+            setCurrentView(saved.view);
+            window.history.replaceState(saved, '');
+          } catch {
+            setIsLoggedIn(false);
+            setUserRole(UserRole.STUDENT_MS);
+            setCurrentView(View.STUDENT_DASHBOARD);
+          }
+        } else {
+          setIsLoggedIn(false);
+          setUserRole(UserRole.STUDENT_MS);
+          setCurrentView(View.STUDENT_DASHBOARD);
+        }
       }
     };
     window.addEventListener('popstate', onPop);
-    window.history.replaceState({ login: AUTH_DISABLED, role: UserRole.STUDENT_MS, view: View.STUDENT_DASHBOARD }, '');
+    const savedRaw = localStorage.getItem(APP_STATE_KEY);
+    if (savedRaw) {
+      try {
+        const saved = JSON.parse(savedRaw) as { login: boolean; role: UserRole; view: View };
+        setIsLoggedIn(saved.login);
+        setUserRole(saved.role);
+        setCurrentView(saved.view);
+        window.history.replaceState(saved, '');
+      } catch {
+        window.history.replaceState({ login: false, role: UserRole.STUDENT_MS, view: View.STUDENT_DASHBOARD }, '');
+      }
+    } else {
+      window.history.replaceState({ login: false, role: UserRole.STUDENT_MS, view: View.STUDENT_DASHBOARD }, '');
+    }
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
@@ -52,6 +81,7 @@ export default function App() {
     setIsLoggedIn(login);
     setUserRole(role);
     setCurrentView(view);
+    try { localStorage.setItem(APP_STATE_KEY, JSON.stringify({ login, role, view })); } catch {}
     window.history.pushState({ login, role, view }, '');
   };
 
@@ -76,19 +106,17 @@ export default function App() {
       }
       return;
     }
-    if (isLoggedIn) {
-      if (target === 'Khóa học') {
-        if (userRole === UserRole.STUDENT_MS || userRole === UserRole.STUDENT_HS) {
-          pushAppState(true, userRole, View.STUDENT_DASHBOARD);
-        }
-        return;
+    if (isLoggedIn && target === 'Khóa học') {
+      if (userRole !== UserRole.PARENT) {
+        pushAppState(true, userRole, View.STUDENT_DASHBOARD);
       }
-      if (target === 'Phụ huynh' || target === 'Dành cho phụ huynh') {
-        if (userRole === UserRole.PARENT) {
-          pushAppState(true, UserRole.PARENT, View.PARENT_DASHBOARD);
-        }
-        return;
+      return;
+    }
+    if (isLoggedIn && (target === 'Phụ huynh' || target === 'Dành cho phụ huynh')) {
+      if (userRole === UserRole.PARENT) {
+        pushAppState(true, userRole, View.PARENT_DASHBOARD);
       }
+      return;
     }
   };
   
@@ -117,18 +145,19 @@ export default function App() {
         />
       );
     }
-    return <LandingPageExternal onNavigate={handleNavigate} userRole={userRole} />;
+    return <LandingPageExternal onNavigate={handleNavigate} />;
   }
 
   if (currentView === View.HOME) {
-    return <LandingPageExternal onNavigate={handleNavigate} isLoggedIn={true} userName={username} userRole={userRole} />;
+    const onLogout = () => { setUsername(''); pushAppState(false, UserRole.STUDENT_MS, View.STUDENT_DASHBOARD); };
+    return <LandingPageExternal onNavigate={handleNavigate} isLoggedIn={true} userName={username} onLogout={onLogout} />;
   }
 
   const isStudent = userRole === UserRole.STUDENT_MS || userRole === UserRole.STUDENT_HS;
   const renderView = () => {
     switch(currentView) {
       case View.STUDENT_DASHBOARD:
-        return <StudentDashboard userRole={userRole} />;
+        return isStudent ? <StudentDashboard userRole={userRole} /> : <ParentDashboard setView={(v) => pushAppState(true, userRole, v)} />;
       case View.PARENT_DASHBOARD:
         return <ParentDashboard setView={(v) => pushAppState(true, userRole, v)} />;
       case View.ADMIN_DASHBOARD:
@@ -150,7 +179,11 @@ export default function App() {
         currentView={currentView}
         userRole={userRole} 
         setUserRole={handleSetUserRoleAndSwitchView} 
-        setView={(view) => pushAppState(true, userRole, view)}
+        setView={(view) => {
+          if (userRole === UserRole.PARENT && view !== View.PARENT_DASHBOARD) return;
+          if (userRole !== UserRole.PARENT && view === View.PARENT_DASHBOARD) return;
+          pushAppState(true, userRole, view);
+        }}
         onLogoClick={() => pushAppState(true, userRole, View.HOME)}
       />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">

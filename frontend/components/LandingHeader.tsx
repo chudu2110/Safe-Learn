@@ -1,8 +1,7 @@
 import React from 'react';
 import { LANDING_ICONS, ICONS } from '../constants';
-import { UserRole } from '../types';
 
-export const LandingHeader: React.FC<{ onNavigate: (target: string) => void; isLoggedIn?: boolean; userName?: string; userRole?: UserRole; isDark?: boolean; onToggleDark?: () => void }> = ({ onNavigate, isLoggedIn = false, userName, userRole, isDark = false, onToggleDark }) => {
+export const LandingHeader: React.FC<{ onNavigate: (target: string) => void; isLoggedIn?: boolean; userName?: string; isDark?: boolean; onToggleDark?: () => void }> = ({ onNavigate, isLoggedIn = false, userName, isDark = false, onToggleDark }) => {
   const scrollToId = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -28,13 +27,9 @@ export const LandingHeader: React.FC<{ onNavigate: (target: string) => void; isL
           </nav>
           <div className="flex items-center space-x-2">
             {isLoggedIn ? (
-              userRole === UserRole.PARENT ? (
-                <button onClick={() => onNavigate('Phụ huynh')} className="text-sm font-bold text.white bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-4 py-2 rounded-lg hover:bg-cyan-700 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors">Vào trang Phụ huynh</button>
-              ) : (
-                <button onClick={() => onNavigate('Khóa học')} className="text-sm font-bold text.white bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-4 py-2 rounded-lg hover:bg-cyan-700 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors">
-                  Xin chào, {userName || 'bạn'}
-                </button>
-              )
+              <button onClick={() => onNavigate('Khóa học')} className="text-sm font-bold text.white bg-cyan-600 dark:bg-gradient-to-r dark:from-cyan-500 dark:to-accent-purple px-4 py-2 rounded-lg hover:bg-cyan-700 dark:hover:from-cyan-400 dark:hover:to-accent-purple/90 transition-colors">
+                Xin chào, {userName || 'bạn'}
+              </button>
             ) : (
               <>
                 <button onClick={() => onToggleDark && onToggleDark()} aria-label="Chuyển chế độ tối" className="flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-100 hover:dark:bg-slate-700 transition-colors">
