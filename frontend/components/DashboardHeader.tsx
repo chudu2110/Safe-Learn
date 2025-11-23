@@ -80,9 +80,7 @@ export const DashboardHeader: React.FC<{
             {currentView !== View.PARENT_DASHBOARD && (
               <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-full flex items-center">
                 {(() => {
-                  const base = currentView === View.STUDENT_DASHBOARD
-                    ? [UserRole.STUDENT_MS, UserRole.STUDENT_HS]
-                    : [UserRole.STUDENT_MS, UserRole.STUDENT_HS, UserRole.PARENT];
+                  const base = [UserRole.STUDENT_MS, UserRole.STUDENT_HS];
                   const roles = userRole === UserRole.ADMIN ? [...base, UserRole.ADMIN] : base;
                   return roles;
                 })().map(role => (
@@ -90,7 +88,7 @@ export const DashboardHeader: React.FC<{
                       onClick={() => setUserRole(role)}
                       className={`px-3 py-1.5 text-xs font-bold rounded-full transition-colors duration-300 ${userRole === role ? 'bg-white dark:bg-slate-900 text-cyan-600 dark:text.white shadow-md' : 'text-slate-500 dark:text-slate-300'}`}
                   >
-                     {role === UserRole.STUDENT_MS ? "THCS" : role === UserRole.STUDENT_HS ? "THPT" : role === UserRole.PARENT ? "Phụ Huynh" : "Admin"}
+                     {role === UserRole.STUDENT_MS ? "THCS" : role === UserRole.STUDENT_HS ? "THPT" : "Admin"}
                   </button>
                 ))}
               </div>
