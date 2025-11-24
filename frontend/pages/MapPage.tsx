@@ -426,33 +426,26 @@ export const MapPage: React.FC = () => {
                     <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Hotline quốc gia</h4>
                       <div className="flex flex-col gap-2">
-                        <a href="tel:111" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-red-500 text-white hover:bg-red-600">
+                        <a href="tel:111" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff4d4f 0%,#ff1f1f 60%,#ff7a7a 100%)', boxShadow: '0 8px 20px rgba(255,79,79,0.35)' }}>
                           <span>111 — Bảo vệ trẻ em</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-red-500 text-white hover:bg-red-600">
+                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff7ab6 0%,#ff4bd1 60%,#b347ff 100%)', boxShadow: '0 8px 20px rgba(179,71,255,0.35)' }}>
                           <span>1800 1768 — Bảo vệ phụ nữ/trẻ em (UNFPA)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-cyan-500 text-white hover:bg-cyan-600">
+                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#00f5d4 0%,#00c4b3 60%,#00a3a3 100%)', boxShadow: '0 8px 20px rgba(0,197,179,0.35)' }}>
                           <span>1900 9095 — Bộ Y tế</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-slate-800 text-white hover:bg-slate-700">
+                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#34d399 0%,#10b981 60%,#059669 100%)', boxShadow: '0 8px 20px rgba(16,185,129,0.35)' }}>
                           <span>024 3333 55 99 — CSAGA (Giới, Gia đình, Vị thành niên)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-slate-800 text-white hover:bg-slate-700">
+                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#00b4d8 0%,#0096c7 60%,#0077b6 100%)', boxShadow: '0 8px 20px rgba(0,150,199,0.35)' }}>
                           <span>(84-4) 3577 0261 — CCIHP (Sáng kiến Sức khỏe và Dân số)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-accent-orange text-white hover:brightness-110">
+                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff9f1c 0%,#ff6b6b 60%,#f06595 100%)', boxShadow: '0 8px 20px rgba(255,107,107,0.35)' }}>
                           <span>096 306 1414 — Tư vấn tâm lý “Ngày Mai”</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
-                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-md px-3 py-2 bg-accent-purple text-white hover:brightness-110">
+                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#7c3aed 0%,#6366f1 60%,#3b82f6 100%)', boxShadow: '0 8px 20px rgba(99,102,241,0.35)' }}>
                           <span>1900 9204 — BlueBlue Hotline (tâm lý cho thanh thiếu niên)</span>
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4"><path d="M2 8l10 10 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                         </a>
                       </div>
                     </div>
