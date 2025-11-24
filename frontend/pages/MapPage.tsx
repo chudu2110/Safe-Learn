@@ -412,7 +412,18 @@ export const MapPage: React.FC = () => {
               {catsOpen && (
                 <div className="flex flex-wrap gap-2 p-2">
                   {Object.values(MapServiceType).map(type => (
-                    <button key={type} onClick={() => toggleFilter(type)} className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>{type}</button>
+                    <button
+                      key={type}
+                      onClick={() => toggleFilter(type)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-300 flex-grow ${filters.includes(type) ? `${serviceColors[type]} text-white shadow-md` : 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                    >
+                      <span className="inline-flex items-center">
+                        {type}
+                        {type === MapServiceType.HOTLINE ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 ml-2" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.49 19.49 0 0 1-6-6 19.86 19.86 0 0 1-3.07-8.67A2 2 0 0 1 4.12 2h3a2 2 0 0 1 2 1.72 12.38 12.38 0 0 0 .67 2.73 2 2 0 0 1-.45 2.11L8 9a16 16 0 0 0 6 6l.44-.34a2 2 0 0 1 2.11-.45 12.38 12.38 0 0 0 2.73.67A2 2 0 0 1 22 16.92Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        ) : null}
+                      </span>
+                    </button>
                   ))}
                 </div>
               )}
@@ -426,25 +437,25 @@ export const MapPage: React.FC = () => {
                     <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Hotline quốc gia</h4>
                       <div className="flex flex-col gap-2">
-                        <a href="tel:111" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff4d4f 0%,#ff1f1f 60%,#ff7a7a 100%)', boxShadow: '0 8px 20px rgba(255,79,79,0.35)' }}>
+                        <a href="tel:111" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ef4444 0%,#dc2626 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>111 — Bảo vệ trẻ em</span>
                         </a>
-                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff7ab6 0%,#ff4bd1 60%,#b347ff 100%)', boxShadow: '0 8px 20px rgba(179,71,255,0.35)' }}>
+                        <a href="tel:18001768" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#f472b6 0%,#d946ef 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>1800 1768 — Bảo vệ phụ nữ/trẻ em (UNFPA)</span>
                         </a>
-                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#00f5d4 0%,#00c4b3 60%,#00a3a3 100%)', boxShadow: '0 8px 20px rgba(0,197,179,0.35)' }}>
+                        <a href="tel:19009095" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#06b6d4 0%,#0891b2 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>1900 9095 — Bộ Y tế</span>
                         </a>
-                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#34d399 0%,#10b981 60%,#059669 100%)', boxShadow: '0 8px 20px rgba(16,185,129,0.35)' }}>
+                        <a href="tel:02433335599" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#10b981 0%,#059669 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>024 3333 55 99 — CSAGA (Giới, Gia đình, Vị thành niên)</span>
                         </a>
-                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#00b4d8 0%,#0096c7 60%,#0077b6 100%)', boxShadow: '0 8px 20px rgba(0,150,199,0.35)' }}>
+                        <a href="tel:+84435770261" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#3b82f6 0%,#2563eb 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>(84-4) 3577 0261 — CCIHP (Sáng kiến Sức khỏe và Dân số)</span>
                         </a>
-                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#ff9f1c 0%,#ff6b6b 60%,#f06595 100%)', boxShadow: '0 8px 20px rgba(255,107,107,0.35)' }}>
+                        <a href="tel:0963061414" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#f97316 0%,#ea580c 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>096 306 1414 — Tư vấn tâm lý “Ngày Mai”</span>
                         </a>
-                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#7c3aed 0%,#6366f1 60%,#3b82f6 100%)', boxShadow: '0 8px 20px rgba(99,102,241,0.35)' }}>
+                        <a href="tel:19009204" className="inline-flex items-center justify-between rounded-xl px-4 py-3 text-white" style={{ background: 'linear-gradient(135deg,#8b5cf6 0%,#6366f1 100%)', boxShadow: '0 6px 12px rgba(15,23,42,0.15)' }}>
                           <span>1900 9204 — BlueBlue Hotline (tâm lý cho thanh thiếu niên)</span>
                         </a>
                       </div>
