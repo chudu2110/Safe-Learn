@@ -24,7 +24,7 @@ const DEFAULT_ACTIVITY_PRESETS = ['học', 'thể thao', 'bạn bè', 'gia đìn
 const CATEGORY_GROUPS: { key: string; title: string; items: { tag: string; label: string; emoji: string }[] }[] = [
   {
     key: 'people',
-    title: 'People',
+    title: 'Hôm nay bạn dành thời gian cho ai?',
     items: [
       { tag: 'friends', label: 'bạn bè', emoji: '⭐' },
       { tag: 'family', label: 'gia đình', emoji: '👨‍👩‍👧' },
@@ -34,7 +34,7 @@ const CATEGORY_GROUPS: { key: string; title: string; items: { tag: string; label
   },
   {
     key: 'weather',
-    title: 'Weather',
+    title: 'Thời tiết hôm nay thế nào?',
     items: [
       { tag: 'sunny', label: 'nắng', emoji: '☀️' },
       { tag: 'cloudy', label: 'mây', emoji: '⛅' },
@@ -44,7 +44,7 @@ const CATEGORY_GROUPS: { key: string; title: string; items: { tag: string; label
   },
   {
     key: 'emotions',
-    title: 'Emotions',
+    title: 'Bạn đã cảm thấy những gì trong này hôm nay?',
     items: [
       { tag: 'excited', label: 'háo hức', emoji: '🎉' },
       { tag: 'relaxed', label: 'thư giãn', emoji: '🛋️' },
@@ -56,19 +56,19 @@ const CATEGORY_GROUPS: { key: string; title: string; items: { tag: string; label
   },
   {
     key: 'meals',
-    title: 'Meals',
+    title: 'Bạn đã ăn những bữa nào cho hôm nay?',
     items: [
       { tag: 'breakfast', label: 'sáng', emoji: '🥐' },
       { tag: 'lunch', label: 'trưa', emoji: '🍱' },
       { tag: 'dinner', label: 'tối', emoji: '🍜' },
       { tag: 'snack', label: 'ăn vặt', emoji: '🍪' },
-      { tag: 'healthy', label: 'healthy', emoji: '🥗' },
-      { tag: 'junk', label: 'junk', emoji: '🍟' },
+      { tag: 'healthy', label: 'lành mạnh', emoji: '🥗' },
+      { tag: 'junk', label: 'đồ ăn nhanh', emoji: '🍟' },
     ],
   },
   {
     key: 'activities',
-    title: 'Activities',
+    title: 'Bạn đã có những hoạt động gì trong ngày?',
     items: [
       { tag: 'study', label: 'học', emoji: '📚' },
       { tag: 'work', label: 'làm việc', emoji: '💼' },
@@ -134,6 +134,67 @@ const StickerIcon: React.FC<{ emoji: string; size?: 'sm' | 'md'; palette: ThemeP
     >
       <span style={{ fontSize }}>{emoji}</span>
     </span>
+  );
+};
+
+const SparkLine: React.FC<{
+  values: (number | null)[];
+  min: number;
+  max: number;
+  color: string;
+  width?: number;
+  height?: number;
+  secondary?: { y: number; color: string } | null;
+  showGrid?: boolean;
+  yTicks?: number[];
+  labelY?: (v: number) => string;
+  labelX?: (i: number) => string;
+  gridColor?: string;
+  padLeft?: number;
+  padBottom?: number;
+  xLabelEvery?: number;
+}> = ({ values, min, max, color, width = Math.max(480, (values.length - 1) * 24), height = 120, secondary, showGrid, yTicks, labelY, labelX, gridColor, padLeft = 28, padBottom = 22, xLabelEvery = 3 }) => {
+  const chartW = width - padLeft;
+  const chartH = height - padBottom;
+  const step = (values.length > 1) ? (chartW / (values.length - 1)) : chartW;
+  let d = '';
+  let prev = false;
+  for (let i = 0; i < values.length; i++) {
+    const v = values[i];
+    if (v == null) { prev = false; continue; }
+    const x = padLeft + i * step;
+    const y = ((max - v) / (max - min)) * chartH;
+    d += (prev ? 'L' : 'M') + x + ' ' + y + ' ';
+    prev = true;
+  }
+  const secY = secondary ? (((max - secondary.y) / (max - min)) * chartH) : null;
+  return (
+    <div className="overflow-hidden">
+      <svg style={{ width: '100%', height }} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+        {showGrid && (
+          <g>
+            {Array.from({ length: values.length }).map((_, i) => (
+              <path key={`vx-${i}`} d={`M${padLeft + i * step} 0 L${padLeft + i * step} ${chartH}`} stroke={gridColor || '#ddd'} strokeWidth={0.5} />
+            ))}
+            {(yTicks || []).map((t, idx) => {
+              const yy = ((max - t) / (max - min)) * chartH;
+              return <path key={`vy-${idx}`} d={`M${padLeft} ${yy} L${padLeft + chartW} ${yy}`} stroke={gridColor || '#ddd'} strokeWidth={0.5} />;
+            })}
+          </g>
+        )}
+        {secondary && secY !== null ? (
+          <path d={`M${padLeft} ${secY} L${padLeft + chartW} ${secY}`} stroke={secondary.color} strokeWidth={1} strokeDasharray="4 4" fill="none" />
+        ) : null}
+        <path d={d.trim()} stroke={color} strokeWidth={2} fill="none" />
+        {showGrid && labelY && (yTicks || []).map((t, idx) => {
+          const yy = ((max - t) / (max - min)) * chartH;
+          return <text key={`ly-${idx}`} x={4} y={yy - 2} fill={gridColor || '#888'} fontSize={12}>{labelY(t)}</text>;
+        })}
+        {showGrid && labelX && values.map((v, i) => (
+          i % xLabelEvery === 0 ? <text key={`lx-${i}`} x={padLeft + i * step} y={chartH + padBottom - 6} fill={gridColor || '#888'} fontSize={11}>{labelX(i)}</text> : null
+        ))}
+      </svg>
+    </div>
   );
 };
 
@@ -261,6 +322,27 @@ const DayEditor: React.FC<{
   };
   return (
     <div className="fixed inset-0 bg-black/40 flex items-end md:items-center justify-center z-50">
+      <style>
+        {`
+        .custom-scroll-y { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-bg); }
+        .custom-scroll-y::-webkit-scrollbar { width: 8px; }
+        .custom-scroll-y::-webkit-scrollbar-track { background: var(--scroll-bg); border-radius: 8px; }
+        .custom-scroll-y::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 8px; border: 2px solid var(--scroll-bg); }
+        .custom-scroll-y:hover::-webkit-scrollbar-thumb { background: var(--scroll-thumb-hover); }
+
+        .custom-scroll-x { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent; }
+        .custom-scroll-x::-webkit-scrollbar { height: 6px; }
+        .custom-scroll-x::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll-x::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 8px; }
+        .custom-scroll-x:hover::-webkit-scrollbar-thumb { background: var(--scroll-thumb-hover); }
+        .range-themed { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; }
+        .range-themed::-webkit-slider-runnable-track { height: 8px; background: var(--range-track); border: 1px solid var(--range-border); border-radius: 999px; }
+        .range-themed::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; background: var(--range-thumb); border: 2px solid var(--range-border); border-radius: 50%; margin-top: -5px; box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
+        .range-themed:hover::-webkit-slider-thumb { background: var(--range-hover); }
+        .range-themed::-moz-range-track { height: 8px; background: var(--range-track); border: 1px solid var(--range-border); border-radius: 999px; }
+        .range-themed::-moz-range-thumb { width: 18px; height: 18px; background: var(--range-thumb); border: 2px solid var(--range-border); border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
+        `}
+      </style>
       <VintageCard vintage={vintage} palette={palette} className={`w-full md:w-[720px] max-w-[90vw] p-4`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -269,10 +351,18 @@ const DayEditor: React.FC<{
           </div>
           <button onClick={onClose} className={`px-3 py-1 rounded-lg font-semibold`} style={{ backgroundColor: palette?.cardBg, border: `1px solid ${palette?.border}`, color: palette?.text }}>Đóng</button>
         </div>
-        <div className="grid md:grid-cols-2 gap-3 mt-3 max-h-[70vh] overflow-y-auto pr-1">
+        <div className="grid md:grid-cols-2 gap-3 mt-3 max-h-[70vh] overflow-y-auto pr-1 custom-scroll-y" style={{
+          ['--scroll-bg' as any]: palette?.bg,
+          ['--scroll-thumb' as any]: palette?.border,
+          ['--scroll-thumb-hover' as any]: palette?.accent,
+        }}>
           <VintageCard vintage={vintage} palette={palette} className="p-4">
-            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Hôm nay bạn thấy sao?</p>
-            <div className="mt-2 flex items-center gap-2 overflow-x-auto">
+            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Ngày hôm nay của bạn thế nào?</p>
+            <div className="mt-2 flex items-center gap-2 overflow-x-auto custom-scroll-x" style={{
+              ['--scroll-bg' as any]: 'transparent',
+              ['--scroll-thumb' as any]: palette?.border,
+              ['--scroll-thumb-hover' as any]: palette?.accent,
+            }}>
               {MOOD_STICKERS.map(ms => {
                 const active = value.mood === ms.key;
                 return (
@@ -358,14 +448,27 @@ const DayEditor: React.FC<{
           ))}
           
           <VintageCard vintage={vintage} palette={palette} className="p-4">
-            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Ghi chú</p>
+            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Bạn có muốn viết 1 chút gì đó về hôm nay cho bản thân không?</p>
             <textarea value={value.note || ''} onChange={e => onChange({ ...value, note: e.target.value })} placeholder="Viết vài dòng..." className={`mt-3 w-full h-24 px-3 py-2 rounded-lg text-sm`}
               style={{ backgroundColor: palette?.bg, border: `1px solid ${palette?.border}`, color: palette?.text }}/>
           </VintageCard>
           <VintageCard vintage={vintage} palette={palette} className="p-4">
-            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Giấc ngủ</p>
+            <p className={`${vintage ? 'font-serif' : 'font-bold'}`} style={{ color: palette?.text }}>Bạn có được một giấc ngủ tốt hôm nay chứ?</p>
             <div className="mt-3 flex items-center gap-3">
-              <input type="range" min={0} max={14} value={value.sleepHours || 0} onChange={e => onChange({ ...value, sleepHours: parseInt(e.target.value) })} className="flex-1"/>
+              <input
+                type="range"
+                min={0}
+                max={14}
+                value={value.sleepHours || 0}
+                onChange={e => onChange({ ...value, sleepHours: parseInt(e.target.value) })}
+                className="range-themed flex-1"
+                style={{
+                  ['--range-track' as any]: palette?.bg,
+                  ['--range-thumb' as any]: palette?.cardBg,
+                  ['--range-border' as any]: palette?.border,
+                  ['--range-hover' as any]: palette?.accent,
+                }}
+              />
               <span className={`font-semibold`} style={{ color: palette?.text }}>{value.sleepHours || 0}h</span>
             </div>
           </VintageCard>
@@ -391,6 +494,9 @@ export const MoodTrackerPage: React.FC = () => {
   const vintage = true;
   const palette = THEMES[themeIdx];
   const [editingDay, setEditingDay] = useState<string | null>(null);
+  const [chartOpen, setChartOpen] = useState<null | 'mood' | 'sleep' | 'meals' | 'activities'>(null);
+  const [chartType, setChartType] = useState<'mood'|'sleep'|'meals'|'activities'>('mood');
+  const [chartFilterOpen, setChartFilterOpen] = useState(false);
 
   useEffect(() => {
     const raw = localStorage.getItem('mood_entries');
@@ -427,7 +533,15 @@ export const MoodTrackerPage: React.FC = () => {
     const topActs = Object.entries(activityCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const moodCounts: Record<Mood, number> = { great:0, good:0, neutral:0, bad:0, angry:0, awful:0 };
     moods.forEach(m => { moodCounts[m] = (moodCounts[m] || 0) + 1; });
-    return { score, avgSleep, topActs, moodCounts };
+    const seriesMood = keys.map(k => {
+      const m = entries[k]?.mood;
+      return m ? moodScore(m) : null;
+    });
+    const seriesSleep = keys.map(k => {
+      const v = entries[k]?.sleepHours;
+      return typeof v === 'number' ? v : null;
+    });
+    return { score, avgSleep, topActs, moodCounts, seriesMood, seriesSleep, keys };
   }, [grid, entries]);
 
   const barForMood = (m: Mood) => monthStats.moodCounts[m] || 0;
@@ -439,12 +553,12 @@ export const MoodTrackerPage: React.FC = () => {
           <div className="relative flex items-center justify-between">
             <MonthSelector value={month} onChange={setMonth} vintage={vintage} palette={palette} />
             <div className="flex items-center gap-2">
-              <button onClick={()=>setThemeOpen(o=>!o)} className={`px-3 py-2 rounded-lg font-semibold`} style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}`, color: palette.text }}>Theme</button>
+              <button onClick={()=>setThemeOpen(o=>!o)} className={`px-3 py-2 rounded-lg font-semibold`} style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}`, color: palette.text }}>Nền mới</button>
               {themeOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={()=>setThemeOpen(false)}></div>
                   <div className="absolute right-3 top-12 z-50 rounded-xl shadow" style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}` }}>
-                    <div className="p-2 w-[360px] max-h-64 overflow-auto">
+                    <div className="p-2 w-[360px] max-h-72 overflow-y-auto" style={{ scrollbarWidth: 'thin' as any, scrollbarColor: `${palette.subtext} ${palette.cardBg}` }}>
                       <div className="grid grid-cols-2 gap-2">
                         <div className="flex flex-col gap-2">
                           {THEMES.filter(t=>t.group!=='dark').map((p) => (
@@ -507,19 +621,123 @@ export const MoodTrackerPage: React.FC = () => {
             </div>
           </VintageCard>
           <VintageCard vintage={vintage} palette={palette} className="p-4">
-            <div className="flex items-center gap-2">
-              <span className={`w-8 h-8 rounded-full flex items-center justify-center`} style={{ backgroundColor: palette.cardBg }}>📈</span>
-              <p className={`font-serif`} style={{ color: palette.text }}>Thống kê tháng</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <p className={`font-serif`} style={{ color: palette.text }}>Thống kê tháng</p>
+              </div>
+              <div className="relative">
+                <button onClick={()=>setChartFilterOpen(o=>!o)} aria-label="Bộ lọc biểu đồ" className="w-8 h-8 rounded-md flex items-center justify-center" style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}`, color: palette.text }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke={palette.text} strokeWidth="2" strokeLinecap="round"/></svg>
+                </button>
+                {chartFilterOpen && (
+                  <div className="absolute right-0 mt-2 z-50 w-44 rounded-lg" style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}` }}>
+                    <button onClick={()=>{ setChartType('mood'); setChartFilterOpen(false); }} className="w-full text-left px-3 py-2 hover:opacity-90" style={{ color: palette.text }}>Mood theo ngày</button>
+                    <button onClick={()=>{ setChartType('sleep'); setChartFilterOpen(false); }} className="w-full text-left px-3 py-2 hover:opacity-90" style={{ color: palette.text }}>Giấc ngủ theo ngày</button>
+                    <button onClick={()=>{ setChartType('meals'); setChartFilterOpen(false); }} className="w-full text-left px-3 py-2 hover:opacity-90" style={{ color: palette.text }}>Bữa ăn theo ngày</button>
+                    <button onClick={()=>{ setChartType('activities'); setChartFilterOpen(false); }} className="w-full text-left px-3 py-2 hover:opacity-90" style={{ color: palette.text }}>Hoạt động theo ngày</button>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <VintageCard vintage={vintage} palette={palette} className="p-3">
-                <p className={`text-xs`} style={{ color: palette.subtext }}>Điểm mood</p>
-                <p className={`text-2xl font-bold`} style={{ color: palette.text }}>{monthStats.score}</p>
-              </VintageCard>
-              <VintageCard vintage={vintage} palette={palette} className="p-3">
-                <p className={`text-xs`} style={{ color: palette.subtext }}>Ngủ trung bình</p>
-                <p className={`text-2xl font-bold`} style={{ color: palette.text }}>{monthStats.avgSleep}h</p>
-              </VintageCard>
+            <div className="mt-3">
+              <div className="flex items-center justify-between">
+                <p className={`text-xs`} style={{ color: palette.subtext }}>
+                  {chartType==='mood' ? 'Mood theo ngày' : chartType==='sleep' ? 'Giấc ngủ (giờ/ngày)' : chartType==='meals' ? 'Bữa ăn theo ngày (số bữa)' : 'Hoạt động theo ngày (số loại)'}
+                </p>
+              </div>
+              <div className="mt-2">
+                {chartType==='mood' && (
+                  <SparkLine
+                    values={monthStats.seriesMood}
+                    min={-2}
+                    max={2}
+                    color={palette.accent}
+                    secondary={{ y: 0, color: palette.border }}
+                    height={100}
+                    showGrid
+                    yTicks={[-2,-1,0,1,2]}
+                    labelY={(v)=>String(v + 2)}
+                    labelX={(i)=> i === 0 ? '' : String(new Date(monthStats.keys[i]).getDate())}
+                    gridColor={palette.border}
+                    padLeft={40}
+                    padBottom={28}
+                    xLabelEvery={3}
+                  />
+                )}
+                {chartType==='sleep' && (
+                  <SparkLine
+                    values={monthStats.seriesSleep}
+                    min={0}
+                    max={14}
+                    color={palette.accent}
+                    secondary={{ y: 8, color: palette.border }}
+                    height={100}
+                    showGrid
+                    yTicks={[0,4,8,12,14]}
+                    labelY={(v)=>`${v}h`}
+                    labelX={(i)=> i === 0 ? '' : String(new Date(monthStats.keys[i]).getDate())}
+                    gridColor={palette.border}
+                    padLeft={40}
+                    padBottom={28}
+                    xLabelEvery={3}
+                  />
+                )}
+                {chartType==='meals' && (
+                  (()=>{
+                    const mealTags = CATEGORY_GROUPS.find(g=>g.key==='meals')?.items.map(i=>i.tag) || [];
+                    const series = monthStats.keys.map(k => {
+                      const acts = entries[k]?.activities || [];
+                      return acts.filter(a => mealTags.includes(a)).length || 0;
+                    });
+                    return (
+                      <SparkLine
+                        values={series}
+                        min={0}
+                        max={4}
+                        color={palette.accent}
+                        secondary={{ y: 3, color: palette.border }}
+                        height={90}
+                        showGrid
+                        yTicks={[0,1,2,3,4]}
+                        labelY={(v)=>String(v)}
+                        labelX={(i)=>String(new Date(monthStats.keys[i]).getDate())}
+                        gridColor={palette.border}
+                      />
+                    );
+                  })()
+                )}
+                {chartType==='activities' && (
+                  (()=>{
+                    const actTags = CATEGORY_GROUPS.find(g=>g.key==='activities')?.items.map(i=>i.tag) || [];
+                    const series = monthStats.keys.map(k => {
+                      const acts = entries[k]?.activities || [];
+                      return acts.filter(a => actTags.includes(a)).length || 0;
+                    });
+                    const maxVal = Math.max(4, ...series);
+                    const ticks = Array.from({length:5}, (_,i)=> Math.round((i*maxVal)/4));
+                    return (
+                      <SparkLine
+                        values={series}
+                        min={0}
+                        max={maxVal}
+                        color={palette.accent}
+                        secondary={null}
+                        height={90}
+                        showGrid
+                        yTicks={ticks}
+                        labelY={(v)=>String(v)}
+                        labelX={(i)=>String(new Date(monthStats.keys[i]).getDate())}
+                        gridColor={palette.border}
+                      />
+                    );
+                  })()
+                )}
+              </div>
+              <div className="mt-2 flex justify-end">
+                <button onClick={()=>setChartOpen(chartType)} className="w-8 h-8 rounded-md flex items-center justify-center" style={{ border: `1px solid ${palette.border}`, backgroundColor: palette.cardBg }} aria-label="Phóng to biểu đồ">
+                  <svg width="16" height="16" viewBox="0 0 24 24"><path d="M4 10h6V4M14 20v-6h6" fill="none" stroke={palette.text} strokeWidth="1.6"/></svg>
+                </button>
+              </div>
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between">
@@ -560,6 +778,103 @@ export const MoodTrackerPage: React.FC = () => {
             vintage={vintage}
             palette={palette}
           />
+        )}
+        {chartOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <VintageCard vintage={vintage} palette={palette} className="p-4 w-[92vw] max-w-[1000px]">
+              <div className="flex items-center justify-between">
+                <p className={`font-serif`} style={{ color: palette.text }}>
+                  {chartOpen === 'mood' ? 'Mood theo ngày' : chartOpen === 'sleep' ? 'Giấc ngủ theo ngày' : chartOpen === 'meals' ? 'Bữa ăn theo ngày' : 'Hoạt động theo ngày'}
+                </p>
+                <button onClick={()=>setChartOpen(null)} className="px-3 py-1 rounded-md" style={{ border: `1px solid ${palette.border}`, backgroundColor: palette.cardBg, color: palette.text }}>Đóng</button>
+              </div>
+              <div className="mt-3">
+                {chartOpen === 'mood' ? (
+                  <SparkLine
+                    values={monthStats.seriesMood}
+                    min={-2}
+                    max={2}
+                    color={palette.accent}
+                    secondary={{ y: 0, color: palette.border }}
+                    showGrid
+                    yTicks={[-2,-1,0,1,2]}
+                    labelY={(v)=>String(v + 2)}
+                    labelX={(i)=> i === 0 ? '' : String(new Date(monthStats.keys[i]).getDate())}
+                    gridColor={palette.border}
+                    height={240}
+                    padLeft={48}
+                    padBottom={36}
+                    xLabelEvery={2}
+                  />
+                ) : chartOpen === 'sleep' ? (
+                  <SparkLine
+                    values={monthStats.seriesSleep}
+                    min={0}
+                    max={14}
+                    color={palette.accent}
+                    secondary={{ y: 8, color: palette.border }}
+                    showGrid
+                    yTicks={[0,4,8,12,14]}
+                    labelY={(v)=>`${v}h`}
+                    labelX={(i)=> i === 0 ? '' : String(new Date(monthStats.keys[i]).getDate())}
+                    gridColor={palette.border}
+                    height={240}
+                    padLeft={48}
+                    padBottom={36}
+                    xLabelEvery={2}
+                  />
+                ) : chartOpen === 'meals' ? (
+                  (()=>{
+                    const mealTags = CATEGORY_GROUPS.find(g=>g.key==='meals')?.items.map(i=>i.tag) || [];
+                    const series = monthStats.keys.map(k => {
+                      const acts = entries[k]?.activities || [];
+                      return acts.filter(a => mealTags.includes(a)).length || 0;
+                    });
+                    return (
+                      <SparkLine
+                        values={series}
+                        min={0}
+                        max={4}
+                        color={palette.accent}
+                        secondary={{ y: 3, color: palette.border }}
+                        showGrid
+                        yTicks={[0,1,2,3,4]}
+                        labelY={(v)=>String(v)}
+                        labelX={(i)=>String(new Date(monthStats.keys[i]).getDate())}
+                        gridColor={palette.border}
+                        height={220}
+                      />
+                    );
+                  })()
+                ) : (
+                  (()=>{
+                    const actTags = CATEGORY_GROUPS.find(g=>g.key==='activities')?.items.map(i=>i.tag) || [];
+                    const series = monthStats.keys.map(k => {
+                      const acts = entries[k]?.activities || [];
+                      return acts.filter(a => actTags.includes(a)).length || 0;
+                    });
+                    const maxVal = Math.max(4, ...series);
+                    const ticks = Array.from({length:5}, (_,i)=> Math.round((i*maxVal)/4));
+                    return (
+                      <SparkLine
+                        values={series}
+                        min={0}
+                        max={maxVal}
+                        color={palette.accent}
+                        secondary={null}
+                        showGrid
+                        yTicks={ticks}
+                        labelY={(v)=>String(v)}
+                        labelX={(i)=>String(new Date(monthStats.keys[i]).getDate())}
+                        gridColor={palette.border}
+                        height={220}
+                      />
+                    );
+                  })()
+                )}
+              </div>
+            </VintageCard>
+          </div>
         )}
       </div>
     </div>
