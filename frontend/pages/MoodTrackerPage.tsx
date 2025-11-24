@@ -137,6 +137,17 @@ const StickerIcon: React.FC<{ emoji: string; size?: 'sm' | 'md'; palette: ThemeP
   );
 };
 
+const FlameDot: React.FC<{ palette: ThemePalette; size?: number; delay?: number }> = ({ palette, size = 18, delay = 0 }) => {
+  const isDark = (palette as any)?.group === 'dark';
+  const s = size;
+  const fontSize = Math.round(s * 0.95);
+  return (
+    <span className="inline-flex items-center justify-center" style={{ width: s, height: s, animation: 'flameFlicker 1.05s infinite ease-in-out', animationDelay: `${delay}s`, filter: isDark ? 'none' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
+      <span style={{ fontSize }}>🔥</span>
+    </span>
+  );
+};
+
 const SparkLine: React.FC<{
   values: (number | null)[];
   min: number;
@@ -546,8 +557,53 @@ export const MoodTrackerPage: React.FC = () => {
 
   const barForMood = (m: Mood) => monthStats.moodCounts[m] || 0;
 
+  const streakStats = useMemo(() => {
+    const hasMoodOn = (d: Date) => {
+      const k = formatDate(d);
+      const e = entries[k];
+      return Boolean(e && e.mood);
+    };
+    const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    let current = 0;
+    let cursor = new Date(t);
+    while (hasMoodOn(cursor)) {
+      current++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    const keysAll = Object.keys(entries).filter(k => entries[k]?.mood);
+    const set = new Set(keysAll);
+    let longest = 0;
+    const dates = keysAll.map(k => new Date(k)).sort((a,b)=> a.getTime() - b.getTime());
+    for (let i = 0; i < dates.length; i++) {
+      const d = dates[i];
+      const prev = new Date(d);
+      prev.setDate(prev.getDate() - 1);
+      if (!set.has(formatDate(prev))) {
+        let len = 1;
+        let c = new Date(d);
+        while (true) {
+          const n = new Date(c);
+          n.setDate(n.getDate() + 1);
+          if (set.has(formatDate(n))) { len++; c = n; } else break;
+        }
+        if (len > longest) longest = len;
+      }
+    }
+    const recent = Array.from({ length: 14 }).map((_, i) => {
+      const dd = new Date(t);
+      dd.setDate(dd.getDate() - (13 - i));
+      const kk = formatDate(dd);
+      const filled = Boolean(entries[kk]?.mood);
+      return { date: dd, filled };
+    });
+    return { current, longest, recent };
+  }, [entries]);
+
+  const STREAK_MILESTONES = [1, 3, 7, 14, 30];
+
   return (
     <div className={`min-h-screen pb-10 font-serif`} style={{ backgroundColor: palette.bg }}>
+      <style>{`@keyframes flameFlicker{0%,100%{transform:translateY(0) scale(1)}35%{transform:translateY(-0.6px) scale(1.12)}60%{transform:translateY(0.4px) scale(0.94)}}`}</style>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <VintageCard vintage={vintage} palette={palette} className={`p-3 mt-2`}>
           <div className="relative flex items-center justify-between">
@@ -741,17 +797,41 @@ export const MoodTrackerPage: React.FC = () => {
             </div>
             <div className="mt-4">
               <div className="flex items-center justify-between">
-                <p className={`font-serif`} style={{ color: palette.text }}>Mood flow</p>
+                <p className={`font-serif`} style={{ color: palette.text }}>Chuỗi streak</p>
               </div>
-              <div className="mt-3 grid grid-cols-5 gap-2">
-                {MOOD_STICKERS.map(ms => (
-                  <div key={ms.key} className="flex items-center gap-2">
-                    <span className="text-xl">{ms.emoji}</span>
-                    <div className={`h-2 flex-1 rounded-full`}
-                      style={{ width: `${Math.min(100, barForMood(ms.key) * 10)}%`, backgroundColor: palette.cardBg }}
-                    ></div>
-                  </div>
-                ))}
+              <div className="mt-2">
+                <p className={`text-sm`} style={{ color: palette.subtext }}>Hiện tại: {streakStats.current} ngày • Dài nhất: {streakStats.longest} ngày</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  {STREAK_MILESTONES.map(m => {
+                    const reached = streakStats.current >= m;
+                    return (
+                      <span key={m} className="px-2.5 py-1 rounded-full text-xs"
+                        style={{
+                          backgroundColor: reached ? palette.accent : palette.cardBg,
+                          border: `1px solid ${palette.border}`,
+                          color: reached ? (palette.group === 'dark' ? '#1a1a1a' : '#2b2b2b') : palette.text
+                        }}
+                      >{m} ngày</span>
+                    );
+                  })}
+                </div>
+                <div className="mt-2 flex items-center gap-2">
+                  {streakStats.recent.map((r, i) => {
+                    const isToday = formatDate(r.date) === formatDate(today);
+                    if (r.filled) {
+                      return (
+                        <span key={i} title={`${String(r.date.getDate()).padStart(2,'0')}/${String(r.date.getMonth()+1).padStart(2,'0')}`}>
+                          <FlameDot palette={palette} size={isToday ? 22 : 18} delay={(i % 3) * 0.18} />
+                        </span>
+                      );
+                    }
+                    return (
+                      <span key={i} className={`rounded-full`} title={`${String(r.date.getDate()).padStart(2,'0')}/${String(r.date.getMonth()+1).padStart(2,'0')}`}
+                        style={{ width: 18, height: 18, backgroundColor: palette.cardBg, border: `1px solid ${palette.border}` }}
+                      ></span>
+                    );
+                  })}
+                </div>
               </div>
               <div className="mt-4">
                 <p className={`font-serif`} style={{ color: palette.text }}>Hoạt động nổi bật</p>
