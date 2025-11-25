@@ -50,9 +50,18 @@ export const DashboardHeader: React.FC<{
     };
     update();
     const onResize = () => requestAnimationFrame(update);
+    const ro = new (window as any).ResizeObserver ? new (window as any).ResizeObserver(() => update()) : null;
+    if (ro && containerRef.current) ro.observe(containerRef.current);
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, [currentView]);
+    const fontsReady = (document as any).fonts && (document as any).fonts.ready;
+    if (fontsReady && typeof fontsReady.then === 'function') {
+      fontsReady.then(() => update()).catch(() => {});
+    }
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (ro) ro.disconnect();
+    };
+  }, [currentView, userRole]);
   
   return (
     <header className="sticky top-0 z-40 py-3">

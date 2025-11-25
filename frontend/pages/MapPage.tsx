@@ -12,6 +12,7 @@ export const MapPage: React.FC = () => {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [searchPos, setSearchPos] = useState<[number, number] | null>(null);
   const mapRef = useRef<any>(null);
+  const LAST_POS_KEY = 'safelearn_last_pos';
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
@@ -24,7 +25,7 @@ export const MapPage: React.FC = () => {
   const RADIUS_KM = 3;
   const [nearby, setNearby] = useState<any[]>([]);
   const [nearLoading, setNearLoading] = useState(false);
-  const onPosition = useCallback((lat: number, lng: number) => { setUserPos([lat, lng]); }, []);
+  const onPosition = useCallback((lat: number, lng: number) => { setUserPos([lat, lng]); try { localStorage.setItem(LAST_POS_KEY, JSON.stringify({ lat, lng })); } catch {} }, []);
   const toggleFilter = (filter: MapServiceType) => { setFilters(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]); };
   const serviceColors: Record<MapServiceType, string> = {
     [MapServiceType.GYNECOLOGY]: 'bg-accent-purple', [MapServiceType.ANDROLOGY]: 'bg-cyan-500', [MapServiceType.COUNSELING]: 'bg-accent-orange', [MapServiceType.HOTLINE]: 'bg-red-500',
@@ -36,6 +37,7 @@ export const MapPage: React.FC = () => {
         (pos) => {
           const { latitude, longitude } = pos.coords;
           setUserPos([latitude, longitude]);
+          try { localStorage.setItem(LAST_POS_KEY, JSON.stringify({ lat: latitude, lng: longitude })); } catch {}
           setGeoError(null);
           if (mapRef.current) mapRef.current.setView([latitude, longitude], 15, { animate: true });
         },
@@ -45,6 +47,7 @@ export const MapPage: React.FC = () => {
             const data = await res.json();
             if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number' && mapRef.current) {
               setUserPos([data.latitude, data.longitude]);
+              try { localStorage.setItem(LAST_POS_KEY, JSON.stringify({ lat: data.latitude, lng: data.longitude })); } catch {}
               setGeoError('Đang dùng định vị theo IP (độ chính xác thấp). Vui lòng mở qua localhost hoặc HTTPS để dùng GPS.');
               mapRef.current.setView([data.latitude, data.longitude], 12, { animate: true });
             }
@@ -209,6 +212,18 @@ export const MapPage: React.FC = () => {
     };
     document.addEventListener('mousedown', onDocMouseDown);
     return () => { document.removeEventListener('mousedown', onDocMouseDown); };
+  }, []);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(LAST_POS_KEY);
+      if (raw) {
+        const val = JSON.parse(raw);
+        if (val && typeof val.lat === 'number' && typeof val.lng === 'number') {
+          setUserPos([val.lat, val.lng]);
+          if (mapRef.current) mapRef.current.setView([val.lat, val.lng], 15, { animate: true });
+        }
+      }
+    } catch {}
   }, []);
   const distKm = (a: [number, number], b: [number, number]) => {
     const toRad = (x: number) => x * Math.PI / 180;
@@ -576,6 +591,8 @@ const GeoLocate: React.FC<{ onPosition: (lat: number, lng: number) => void; onEr
   const map = useMap();
   const centeredRef = useRef(false);
   const bestAccRef = useRef<number>(Infinity);
+  const watchIdRef = useRef<number | null>(null);
+  const MIN_ACC = 150;
   useEffect(() => {
     map.stopLocate();
     const fallback = async () => {
@@ -605,7 +622,37 @@ const GeoLocate: React.FC<{ onPosition: (lat: number, lng: number) => void; onEr
     map.on('locationfound', onFound);
     map.on('locationerror', onErr);
     map.locate({ watch: true, enableHighAccuracy: true, timeout: 8000, maximumAge: 0 });
-    return () => { map.stopLocate(); map.off('locationfound', onFound); map.off('locationerror', onErr); };
+    if ('geolocation' in navigator) {
+      try {
+        watchIdRef.current = navigator.geolocation.watchPosition(
+          (pos) => {
+            const { latitude, longitude, accuracy } = pos.coords;
+            const acc = typeof accuracy === 'number' ? accuracy : Infinity;
+            if (acc <= MIN_ACC && (acc < bestAccRef.current || !centeredRef.current)) {
+              bestAccRef.current = acc;
+              onPosition(latitude, longitude);
+              if (!centeredRef.current) {
+                map.setView([latitude, longitude], 15, { animate: true });
+                centeredRef.current = true;
+              }
+            }
+          },
+          (err) => { onErr(err); },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      } catch {}
+    }
+    return () => {
+      map.stopLocate();
+      map.off('locationfound', onFound);
+      map.off('locationerror', onErr);
+      if (watchIdRef.current !== null && 'geolocation' in navigator) {
+        try { navigator.geolocation.clearWatch(watchIdRef.current); } catch {}
+        watchIdRef.current = null;
+      }
+      bestAccRef.current = Infinity;
+      centeredRef.current = false;
+    };
   }, [map]);
   return null;
 };
