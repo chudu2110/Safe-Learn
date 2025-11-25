@@ -3,6 +3,7 @@ import { Scenario, UserRole } from '../types';
 import { generateScenario } from '../services/geminiService';
 import { SCENARIOS_MS } from '../../data/scenarios-ms';
 import { SCENARIOS_HS } from '../../data/scenarios-hs';
+import { SCENARIOS_PARENTS } from '../../data/scenarios-parents';
 
 export const ScenarioPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
   const [scenario, setScenario] = useState<Scenario | null>(null);
@@ -12,9 +13,11 @@ export const ScenarioPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => 
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const isMS = userRole === UserRole.STUDENT_MS;
   const isHS = userRole === UserRole.STUDENT_HS;
+  const isParent = userRole === UserRole.PARENT;
   const listMS = SCENARIOS_MS;
   const listHS = SCENARIOS_HS;
-  const total = isMS ? listMS.length : isHS ? listHS.length : 0;
+  const listParents = SCENARIOS_PARENTS;
+  const total = isMS ? listMS.length : isHS ? listHS.length : isParent ? listParents.length : 0;
 
   const isIncorrectFeedback = (feedback: string) => {
     const f = feedback.trim().toLowerCase();
@@ -42,13 +45,13 @@ export const ScenarioPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => 
     setError(null);
     setScenario(null);
     setSelectedOption(null);
-    if (!isMS && !isHS) {
+    if (!isMS && !isHS && !isParent) {
       const result = await generateScenario();
       if (result) { setScenario(result); } else { setError("Không thể tạo tình huống. Vui lòng thử lại sau."); }
     } else {
       if (total > 0) {
         const nextIndex = currentIndex == null ? 0 : (currentIndex + 1) % total;
-        const s = (isMS ? listMS : listHS)[nextIndex] || null;
+        const s = (isMS ? listMS : isHS ? listHS : listParents)[nextIndex] || null;
         if (s) { setScenario(s); setCurrentIndex(nextIndex); } else { setError("Chưa có dữ liệu tình huống."); }
       } else {
         setError("Chưa có dữ liệu tình huống.");
@@ -66,9 +69,9 @@ export const ScenarioPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => 
   }, [userRole]);
 
   const gotoIndex = (i: number) => {
-    if ((!isMS && !isHS) || total === 0) return;
+    if ((!isMS && !isHS && !isParent) || total === 0) return;
     const idx = ((i % total) + total) % total;
-    const s = (isMS ? listMS : listHS)[idx];
+    const s = (isMS ? listMS : isHS ? listHS : listParents)[idx];
     setSelectedOption(null);
     setScenario(s);
     setCurrentIndex(idx);
@@ -79,7 +82,7 @@ export const ScenarioPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => 
       setSelectedOption(null);
       return;
     }
-    if (isMS || isHS) {
+    if (isMS || isHS || isParent) {
       if (total > 0) {
         const nextIndex = currentIndex == null ? 0 : (currentIndex + 1) % total;
         gotoIndex(nextIndex);

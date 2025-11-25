@@ -73,6 +73,15 @@ export const QA_DATA: QASubmission[] = [
   { id: 3, question: '"Sự đồng thuận" (consent) có nghĩa là gì?', answer: 'Sự đồng thuận là sự đồng ý một cách tự nguyện, rõ ràng và tỉnh táo cho một hành động nào đó, đặc biệt trong các mối quan hệ. Bất cứ lúc nào bạn cũng có quyền rút lại sự đồng thuận của mình.', isPopular: true },
 ];
 
+export const QA_PARENTS_DATA: QASubmission[] = [
+  { id: 101, question: 'Nói chuyện về giới tính với con từ độ tuổi nào là phù hợp?', answer: 'Có thể bắt đầu từ sớm với ngôn ngữ đơn giản, tăng dần độ chi tiết theo độ tuổi. Mục tiêu là giúp con hiểu cơ thể, sự tôn trọng ranh giới và biết nói “Không” khi không thoải mái.', isPopular: true },
+  { id: 102, question: 'Giải thích “sự đồng thuận” cho trẻ như thế nào?', answer: 'Dạy con rằng mọi tiếp xúc cơ thể cần sự đồng ý rõ ràng, có thể rút lại bất cứ lúc nào. Khuyến khích con nói “Con không thích” và tôn trọng khi người khác từ chối.', isPopular: true },
+  { id: 103, question: 'Làm gì khi con tò mò về nội dung 18+ trên mạng?', answer: 'Giữ bình tĩnh, hỏi mở để hiểu nhu cầu, hướng dẫn kỹ năng an toàn số, cài công cụ kiểm soát phù hợp, và dạy phân biệt nội dung độc hại với nguồn thông tin khoa học.', isPopular: true },
+  { id: 104, question: 'Hỗ trợ con trong giai đoạn dậy thì thế nào cho đúng?', answer: 'Tôn trọng sự riêng tư, cung cấp kiến thức về thay đổi cơ thể và cảm xúc, chuẩn bị sản phẩm vệ sinh/cơ bản, và khuyến khích đối thoại cởi mở, không phán xét.', isPopular: true },
+  { id: 105, question: 'Giới thiệu về phòng tránh thai và an toàn tình dục cho con ra sao?', answer: 'Tập trung vào sức khỏe, trách nhiệm và tôn trọng bản thân. Giải thích cơ bản về bao cao su, nguy cơ STI, và nhấn mạnh việc tìm hiểu từ nguồn y tế uy tín.', isPopular: true },
+  { id: 106, question: 'Nhận biết và xử lý dấu hiệu con bị lạm dụng như thế nào?', answer: 'Quan sát thay đổi hành vi, sợ hãi bất thường, né tránh người hoặc nơi chốn. Luôn tin con, không gây áp lực, tìm sự hỗ trợ chuyên môn và báo cơ quan chức năng khi cần.', isPopular: true },
+];
+
 export const MAP_SERVICES: ServicePoint[] = [
     { id: 1, name: 'Phòng khám Sức khỏe Vị thành niên An Tâm', type: MapServiceType.GYNECOLOGY, address: '123 Đường Sức Khỏe, Q.1, TP.HCM', friendly: 'teen', position: { top: '25%', left: '30%' } },
     { id: 2, name: 'Trung tâm Tư vấn Tâm lý Tuổi Trẻ', type: MapServiceType.COUNSELING, address: '456 Đường Lắng Nghe, Q.3, TP.HCM', friendly: 'teen', position: { top: '40%', left: '60%' } },

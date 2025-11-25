@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { QA_DATA } from '../constants';
+import { QA_DATA, QA_PARENTS_DATA } from '../constants';
+import { UserRole } from '../../types';
 import { moderateQuestion } from '../services/geminiService';
 
-export const QAPage: React.FC = () => {
+export const QAPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
   const [question, setQuestion] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
+  const popular = userRole === UserRole.PARENT ? QA_PARENTS_DATA : QA_DATA;
+  const placeholder = userRole === UserRole.PARENT
+    ? 'Ví dụ: Nói chuyện về giới tính với con 10 tuổi như thế nào?'
+    : 'Ví dụ: Làm sao để từ chối khi bạn bè rủ xem phim người lớn?';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +41,7 @@ export const QAPage: React.FC = () => {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             className="w-full p-4 bg-slate-100 dark:bg-slate-900 border-2 border-transparent rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
-            placeholder="Ví dụ: Làm sao để từ chối khi bạn bè rủ xem phim người lớn?"
+            placeholder={placeholder}
           ></textarea>
           {message && (
             <p className={`mt-3 text-sm font-medium ${message.type === 'success' ? 'text-green-600 dark:text-green-300' : 'text-red-600 dark:text-red-400'}`}>
@@ -55,7 +60,7 @@ export const QAPage: React.FC = () => {
       <div>
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 text-center">Câu hỏi phổ biến</h3>
         <div className="space-y-4">
-          {QA_DATA.filter(q => q.isPopular).map(q => (
+          {popular.filter(q => q.isPopular).map(q => (
             <div key={q.id} className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
               <p className="font-semibold text-cyan-600 dark:text-cyan-300 mb-1">{q.question}</p>
               <p className="text-slate-500 dark:text-slate-300 leading-relaxed">{q.answer}</p>

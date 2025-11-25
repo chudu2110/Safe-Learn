@@ -77,7 +77,7 @@ export const DashboardHeader: React.FC<{
             ) : (
               <>
                 <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
-                {isStudent && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
+                {(isStudent || isParent) && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
                 <NavButton ref={(el) => (btnRefs.current[View.QA] = el)} view={View.QA} icon={ICONS.qa} label="Hỏi Đáp" />
                 <NavButton ref={(el) => (btnRefs.current[View.MAP] = el)} view={View.MAP} icon={ICONS.map} label="Bản Đồ" />
               </>

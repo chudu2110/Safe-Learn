@@ -168,11 +168,11 @@ export default function App() {
       case View.ADMIN_DASHBOARD:
         return <AdminDashboard />;
       case View.SCENARIOS:
-        return isStudent ? <ScenarioPage userRole={userRole} /> : <StudentDashboard userRole={userRole} />;
+        return (isStudent || userRole === UserRole.PARENT) ? <ScenarioPage userRole={userRole} /> : <StudentDashboard userRole={userRole} />;
       case View.MAP:
         return <MapPage />;
       case View.QA:
-        return <QAPage />;
+        return <QAPage userRole={userRole} />;
       case View.MOODTRACKER:
         return <MoodTrackerPage />;
       default:
@@ -187,7 +187,7 @@ export default function App() {
         userRole={userRole} 
         setUserRole={handleSetUserRoleAndSwitchView} 
         setView={(view) => {
-          if (userRole === UserRole.PARENT && view !== View.PARENT_DASHBOARD) return;
+          if (userRole === UserRole.PARENT && !(view === View.PARENT_DASHBOARD || view === View.SCENARIOS || view === View.MAP || view === View.QA)) return;
           if (userRole !== UserRole.PARENT && view === View.PARENT_DASHBOARD) return;
           pushAppState(true, userRole, view);
         }}
