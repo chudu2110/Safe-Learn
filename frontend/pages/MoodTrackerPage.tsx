@@ -492,6 +492,102 @@ const DayEditor: React.FC<{
   );
 };
 
+const DaySummary: React.FC<{
+  date: string;
+  entry: Entry;
+  onClose: () => void;
+  onEdit: () => void;
+  vintage?: boolean;
+  palette?: ThemePalette;
+}> = ({ date, entry, onClose, onEdit, vintage, palette }) => {
+  const getCustom = () => {
+    try { const raw = localStorage.getItem('mood_custom_items'); return raw ? JSON.parse(raw) as Record<string, { tag: string; label: string; emoji: string }[]> : {}; } catch { return {}; }
+  };
+  const custom = useMemo(getCustom, []);
+  const lookup = (tag: string) => {
+    for (const g of CATEGORY_GROUPS) {
+      const it = g.items.find(i => i.tag === tag);
+      if (it) return { group: g.key, title: g.title, label: it.label, emoji: it.emoji };
+    }
+    if (tag.startsWith('custom:')) {
+      const parts = tag.split(':');
+      const gk = parts[1];
+      const arr = custom[gk] || [];
+      const it = arr.find(x => x.tag === tag);
+      const g = CATEGORY_GROUPS.find(x => x.key === gk);
+      if (it && g) return { group: g.key, title: g.title, label: it.label, emoji: it.emoji };
+    }
+    return null;
+  };
+  const grouped: Record<string, { title: string; items: { label: string; emoji: string }[] }> = {};
+  (entry.activities || []).forEach(t => {
+    const info = lookup(t);
+    if (!info) return;
+    if (!grouped[info.group]) grouped[info.group] = { title: info.title, items: [] };
+    grouped[info.group].items.push({ label: info.label, emoji: info.emoji });
+  });
+  const moodMeta = MOOD_STICKERS.find(m => m.key === entry.mood);
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <VintageCard vintage={vintage} palette={palette} className="w-full md:w-[640px] max-w-[92vw] p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: palette?.cardBg }}>{moodMeta?.emoji || '🗓️'}</span>
+            <p className="font-serif" style={{ color: palette?.text }}>{date}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={onEdit} className="px-3 py-1 rounded-lg font-semibold" style={{ backgroundColor: palette?.cardBg, border: `1px solid ${palette?.border}`, color: palette?.text }}>Sửa</button>
+            <button onClick={onClose} className="px-3 py-1 rounded-lg font-semibold" style={{ backgroundColor: palette?.cardBg, border: `1px solid ${palette?.border}`, color: palette?.text }}>Đóng</button>
+          </div>
+        </div>
+        <div className="mt-3 grid gap-3">
+          <VintageCard vintage={vintage} palette={palette} className="p-3">
+            <div className="flex items-center gap-2">
+              <span className="text-sm" style={{ color: palette?.text }}>Mood:</span>
+              <span className="text-xl">{moodMeta?.emoji || '—'}</span>
+              <span className="text-xs" style={{ color: palette?.subtext }}>{moodMeta?.label || ''}</span>
+            </div>
+          </VintageCard>
+          <VintageCard vintage={vintage} palette={palette} className="p-3">
+            <p className="font-serif" style={{ color: palette?.text }}>Hoạt động trong ngày</p>
+            {Object.keys(grouped).length === 0 ? (
+              <p className="text-sm" style={{ color: palette?.subtext }}>Chưa có dữ liệu</p>
+            ) : (
+              <div className="mt-2 grid gap-2">
+                {Object.entries(grouped).map(([gk, g]) => (
+                  <div key={gk}>
+                    <p className="text-xs" style={{ color: palette?.subtext }}>{g.title}</p>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      {g.items.map((it, idx) => (
+                        <span key={`${it.label}-${idx}`} className="px-2.5 py-1 rounded-full text-xs inline-flex items-center gap-1" style={{ backgroundColor: palette?.cardBg, border: `1px solid ${palette?.border}`, color: palette?.text }}>
+                          <span>{it.emoji}</span>
+                          <span>{it.label}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </VintageCard>
+          <VintageCard vintage={vintage} palette={palette} className="p-3">
+            <p className="font-serif" style={{ color: palette?.text }}>Giấc ngủ</p>
+            <p className="text-sm" style={{ color: palette?.subtext }}>{typeof entry.sleepHours === 'number' ? `${entry.sleepHours} giờ` : 'Chưa có dữ liệu'}</p>
+          </VintageCard>
+          <VintageCard vintage={vintage} palette={palette} className="p-3">
+            <p className="font-serif" style={{ color: palette?.text }}>Ghi chú</p>
+            {(entry.note || '').trim() ? (
+              <p className="text-sm whitespace-pre-wrap break-words" style={{ color: palette?.text }}>{(entry.note || '').trim()}</p>
+            ) : (
+              <p className="text-sm" style={{ color: palette?.subtext }}>Chưa có ghi chú</p>
+            )}
+          </VintageCard>
+        </div>
+      </VintageCard>
+    </div>
+  );
+};
+
 export const MoodTrackerPage: React.FC = () => {
   const today = new Date();
   const [month, setMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
@@ -508,6 +604,7 @@ export const MoodTrackerPage: React.FC = () => {
   const [chartOpen, setChartOpen] = useState<null | 'mood' | 'sleep' | 'meals' | 'activities'>(null);
   const [chartType, setChartType] = useState<'mood'|'sleep'|'meals'|'activities'>('mood');
   const [chartFilterOpen, setChartFilterOpen] = useState(false);
+  const [summaryDay, setSummaryDay] = useState<string | null>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem('mood_entries');
@@ -658,7 +755,10 @@ export const MoodTrackerPage: React.FC = () => {
                 const mood = MOOD_STICKERS.find(ms => ms.key === e?.mood)?.emoji;
                 const isToday = formatDate(today) === k;
                 return (
-                  <button key={k} onClick={() => setEditingDay(k)}
+                  <button key={k} onClick={() => {
+                      const hasAny = Boolean(e && ((e.mood) || (e.activities && e.activities.length > 0) || (typeof e.sleepHours === 'number') || ((e.note || '').trim())));
+                      if (hasAny) { setSummaryDay(k); } else { setEditingDay(k); }
+                    }}
                     className={`relative h-20 rounded-xl flex flex-col items-center justify-center transition hover:scale-[1.01]`}
                     style={{ backgroundColor: palette.cardBg, border: `1px solid ${palette.border}` }}
                   >
@@ -855,6 +955,16 @@ export const MoodTrackerPage: React.FC = () => {
             value={entries[editingDay] || { activities: [], sleepHours: 0, note: '' }}
             onChange={(e)=>setEntry(editingDay, e)}
             onClose={()=>setEditingDay(null)}
+            vintage={vintage}
+            palette={palette}
+          />
+        )}
+        {summaryDay && (
+          <DaySummary
+            date={summaryDay}
+            entry={entries[summaryDay] || { activities: [], sleepHours: 0, note: '' }}
+            onClose={()=>setSummaryDay(null)}
+            onEdit={()=>{ setSummaryDay(null); setEditingDay(summaryDay); }}
             vintage={vintage}
             palette={palette}
           />

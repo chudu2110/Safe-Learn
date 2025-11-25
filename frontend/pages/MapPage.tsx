@@ -24,7 +24,7 @@ export const MapPage: React.FC = () => {
   const RADIUS_KM = 3;
   const [nearby, setNearby] = useState<any[]>([]);
   const [nearLoading, setNearLoading] = useState(false);
-  const onPosition = useCallback((lat: number, lng: number) => { setUserPos([lat, lng]); }, []);
+  const onPosition = useCallback((lat: number, lng: number) => { setUserPos([lat, lng]); setGeoError(null); }, []);
   const toggleFilter = (filter: MapServiceType) => { setFilters(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]); };
   const serviceColors: Record<MapServiceType, string> = {
     [MapServiceType.GYNECOLOGY]: 'bg-accent-purple', [MapServiceType.ANDROLOGY]: 'bg-cyan-500', [MapServiceType.COUNSELING]: 'bg-accent-orange', [MapServiceType.HOTLINE]: 'bg-red-500',
@@ -36,6 +36,7 @@ export const MapPage: React.FC = () => {
         (pos) => {
           const { latitude, longitude } = pos.coords;
           setUserPos([latitude, longitude]);
+          setGeoError(null);
           if (mapRef.current) mapRef.current.setView([latitude, longitude], 15, { animate: true });
         },
         async (err) => {
@@ -49,7 +50,16 @@ export const MapPage: React.FC = () => {
               setUserPos([lat, lon]);
               if (mapRef.current) mapRef.current.setView([lat, lon], 12, { animate: true });
             } else {
-              setGeoError('Không thể xác định vị trí từ IP');
+              try {
+                const r2 = await fetch('https://ip-api.com/json');
+                const d2 = await r2.json();
+                if (d2 && typeof d2.lat === 'number' && typeof d2.lon === 'number') {
+                  setUserPos([d2.lat, d2.lon]);
+                  if (mapRef.current) mapRef.current.setView([d2.lat, d2.lon], 12, { animate: true });
+                } else {
+                  setGeoError('Không thể xác định vị trí từ IP');
+                }
+              } catch {}
             }
           } catch {}
         },
@@ -57,6 +67,41 @@ export const MapPage: React.FC = () => {
       );
     }
   };
+  useEffect(() => {
+    const boot = async () => {
+      try {
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const { latitude, longitude } = pos.coords;
+              setUserPos([latitude, longitude]);
+              setGeoError(null);
+              if (mapRef.current) mapRef.current.setView([latitude, longitude], 15, { animate: true });
+            },
+            async () => {
+              try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+                  setUserPos([data.latitude, data.longitude]);
+                  if (mapRef.current) mapRef.current.setView([data.latitude, data.longitude], 12, { animate: true });
+                } else {
+                  const r2 = await fetch('https://ip-api.com/json');
+                  const d2 = await r2.json();
+                  if (d2 && typeof d2.lat === 'number' && typeof d2.lon === 'number') {
+                    setUserPos([d2.lat, d2.lon]);
+                    if (mapRef.current) mapRef.current.setView([d2.lat, d2.lon], 12, { animate: true });
+                  }
+                }
+              } catch {}
+            },
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+          );
+        }
+      } catch {}
+    };
+    boot();
+  }, []);
   const search = async () => {
     const query = q.trim();
     if (!query) return;
