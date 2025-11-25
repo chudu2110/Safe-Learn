@@ -42,15 +42,18 @@ export const DashboardHeader: React.FC<{
       const container = containerRef.current;
       const activeBtn = btnRefs.current[currentView as number];
       if (!container || !activeBtn) return;
-      const x = activeBtn.offsetLeft;
-      const width = activeBtn.offsetWidth;
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+      const paddingLeft = parseFloat(getComputedStyle(container).paddingLeft || '0');
+      const x = btnRect.left - containerRect.left - paddingLeft;
+      const width = btnRect.width;
       setIndicator({ x, width });
     };
-    update();
+    requestAnimationFrame(update);
     const onResize = () => requestAnimationFrame(update);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
-  }, [currentView]);
+  }, [currentView, userRole]);
   
   return (
     <header className="sticky top-0 z-40 py-3">
