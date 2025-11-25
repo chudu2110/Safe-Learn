@@ -35,14 +35,21 @@ export const MapPage: React.FC = () => {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const { latitude, longitude } = pos.coords;
+          setUserPos([latitude, longitude]);
           if (mapRef.current) mapRef.current.setView([latitude, longitude], 15, { animate: true });
         },
-        async () => {
+        async (err) => {
+          setGeoError(err?.message || 'Không thể truy cập vị trí');
           try {
             const res = await fetch('https://ipapi.co/json/');
             const data = await res.json();
-            if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number' && mapRef.current) {
-              mapRef.current.setView([data.latitude, data.longitude], 12, { animate: true });
+            if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+              const lat = data.latitude;
+              const lon = data.longitude;
+              setUserPos([lat, lon]);
+              if (mapRef.current) mapRef.current.setView([lat, lon], 12, { animate: true });
+            } else {
+              setGeoError('Không thể xác định vị trí từ IP');
             }
           } catch {}
         },
@@ -374,6 +381,9 @@ export const MapPage: React.FC = () => {
             )}
           </div>
           <button onClick={locateMe} className="px-3 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-white hover:bg-cyan-600">Vị trí của tôi</button>
+          {geoError ? (
+            <span className="ml-2 text-xs text-red-600 dark:text-red-400">{geoError}</span>
+          ) : null}
         </div>
         <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-250px)]">
           <div className="w-full lg:w-2/3 xl:w-3/4 bg-slate-100 dark:bg-slate-900 rounded-xl relative overflow-hidden">
@@ -594,7 +604,7 @@ const GeoLocate: React.FC<{ onPosition: (lat: number, lng: number) => void; onEr
     const onErr = (e: any) => { onError && onError(e); fallback(); };
     map.on('locationfound', onFound);
     map.on('locationerror', onErr);
-    map.locate({ watch: true, enableHighAccuracy: true });
+    map.locate({ watch: true, enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
     return () => { map.stopLocate(); map.off('locationfound', onFound); map.off('locationerror', onErr); };
   }, [map]);
   return null;

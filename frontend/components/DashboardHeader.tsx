@@ -68,19 +68,23 @@ export const DashboardHeader: React.FC<{
               className="absolute top-1.5 bottom-1.5 left-0 rounded-full bg-gradient-to-br from-white/70 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md ring-1 ring-white/50 dark:ring-white/10 shadow shadow-slate-900/10 transition-all duration-300 pointer-events-none z-0 overflow-hidden"
               style={{ width: `${indicator.width}px`, transform: `translateX(${indicator.x}px)`, willChange: 'transform,width' }}
             />
-            {isAdmin ? (
-                 <NavButton ref={(el) => (btnRefs.current[View.ADMIN_DASHBOARD] = el)} view={View.ADMIN_DASHBOARD} icon={ICONS.admin} label="Thống kê" />
+            {currentView === View.MOODTRACKER ? (
+              <>
+                <NavButton ref={(el) => (btnRefs.current[View.MOODTRACKER] = el)} view={View.MOODTRACKER} icon={ICONS.pencil} label="Nhật kí cảm xúc" />
+              </>
+            ) : isAdmin ? (
+              <NavButton ref={(el) => (btnRefs.current[View.ADMIN_DASHBOARD] = el)} view={View.ADMIN_DASHBOARD} icon={ICONS.admin} label="Thống kê" />
             ) : (
-                <>
-                  <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
-                  {isStudent && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
-                  <NavButton ref={(el) => (btnRefs.current[View.QA] = el)} view={View.QA} icon={ICONS.qa} label="Hỏi Đáp" />
-                  <NavButton ref={(el) => (btnRefs.current[View.MAP] = el)} view={View.MAP} icon={ICONS.map} label="Bản Đồ" />
-                </>
+              <>
+                <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
+                {isStudent && <NavButton ref={(el) => (btnRefs.current[View.SCENARIOS] = el)} view={View.SCENARIOS} icon={ICONS.scenarios} label="Tình huống" />}
+                <NavButton ref={(el) => (btnRefs.current[View.QA] = el)} view={View.QA} icon={ICONS.qa} label="Hỏi Đáp" />
+                <NavButton ref={(el) => (btnRefs.current[View.MAP] = el)} view={View.MAP} icon={ICONS.map} label="Bản Đồ" />
+              </>
             )}
           </div>
           <div className="flex items-center space-x-2">
-            {!isParent && (
+            {!isParent && currentView !== View.MOODTRACKER && (
               <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-full flex items-center">
                 {(() => {
                   const base = [UserRole.STUDENT_MS, UserRole.STUDENT_HS];

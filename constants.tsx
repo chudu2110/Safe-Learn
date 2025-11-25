@@ -25,6 +25,7 @@ export const ICONS = {
   trophy: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M15.5 2.5a3 3 0 0 0-3-3h-5a3 3 0 0 0-3 3H1.5a1 1 0 0 0-.994.89l-1 9A1 1 0 0 0 .5 13.5H3V17a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5h2.5a1 1 0 0 0 .994-.89l-1-9A1 1 0 0 0 18.5 2.5h-3ZM10 6a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V6.75A.75.75 0 0 1 10 6Z" /></svg>,
   back: <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>,
   mood: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6"><circle cx="12" cy="12" r="9" strokeWidth="2"/><path d="M9 10h.01M15 10h.01" strokeWidth="2" strokeLinecap="round"/><path d="M8 15c1.333-1 2.667-1 4 0s2.667 1 4 0" strokeWidth="2" strokeLinecap="round"/></svg>,
+  pencil: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6"><path d="M16.862 3.487a2.5 2.5 0 0 1 3.536 3.536l-10.5 10.5a2 2 0 0 1-.97.53l-4.012.915a.75.75 0 0 1-.9-.9l.915-4.012a2 2 0 0 1 .53-.97l10.5-10.5Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M14.5 5.5l4 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
 };
 
 // Icons for the new SafeLearn landing page
