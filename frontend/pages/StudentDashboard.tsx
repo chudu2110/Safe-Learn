@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { LessonPlayer } from '../components/LessonPlayer';
+import { getLessonSections } from '../video-sources';
 import { ICONS, LEADERBOARD_DATA, ROADMAP_HS_DATA, ROADMAP_MS_DATA, STUDENT_HS_COURSES, STUDENT_MS_COURSES } from '../constants';
 import { CourseModule, UserRole, RoadmapItem } from '../types';
 
@@ -6,11 +8,37 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
   const courses = userRole === UserRole.STUDENT_HS ? STUDENT_HS_COURSES : STUDENT_MS_COURSES;
   const roadmap = userRole === UserRole.STUDENT_HS ? ROADMAP_HS_DATA : ROADMAP_MS_DATA;
   const [selectedLesson, setSelectedLesson] = useState<RoadmapItem | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [lessonProgress, setLessonProgress] = useState(0);
   const [showCollection, setShowCollection] = useState(false);
   const overall = Math.round(courses.reduce((a, c) => a + c.progress, 0) / courses.length);
   const yGap = 120;
   const lanes = [0, 100, 0, 100];
+  const progressKey = useMemo(() => selectedLesson ? `progress:${userRole}:${selectedLesson.id}` : '', [userRole, selectedLesson]);
+  const sectionsMemo = useMemo(() => selectedLesson ? (getLessonSections(userRole, selectedLesson.id, selectedLesson.title) as any) : [], [userRole, selectedLesson]);
+
+  useEffect(() => {
+    if (selectedLesson) {
+      try {
+        const raw = localStorage.getItem(`progress:${userRole}:${selectedLesson.id}`);
+        const val = raw ? parseInt(raw) : 0;
+        setLessonProgress(Number.isFinite(val) ? Math.max(0, Math.min(100, val)) : 0);
+      } catch {}
+    }
+  }, [selectedLesson, userRole]);
   const MEDAL_ICONS = ['🏅','🎖️','⭐','🎯','🏆','🥇','🥈','🥉'];
+
+  const startLesson = (lesson?: RoadmapItem) => {
+    let target = lesson || roadmap.find(r => r.status === 'current') || roadmap.find(r => r.status === 'completed');
+    if (!target) {
+      const firstUnlocked = roadmap.find(r => r.status !== 'locked');
+      if (firstUnlocked) target = firstUnlocked;
+    }
+    if (target) {
+      setSelectedLesson(target);
+      setPlaying(true);
+    }
+  };
 
   const toneForModule = (p: number): 'cyan'|'emerald'|'slate' => p>=100?'emerald':p>0?'cyan':'slate';
 
@@ -176,7 +204,7 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 bg-white text-cyan-600 font-bold rounded-lg shadow hover:bg-slate-100">Tiếp tục học</button>
+          <button onClick={()=>startLesson()} className="px-4 py-2 bg-white text-cyan-600 font-bold rounded-lg shadow hover:bg-slate-100">Tiếp tục học</button>
           <button onClick={()=>setShowCollection(true)} className="px-4 py-2 bg-white/20 font-bold rounded-lg ring-1 ring-white/30 hover:bg-white/30">Bộ sưu tập</button>
         </div>
       </div>
@@ -319,8 +347,8 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
     };
     const btnBase = 'inline-flex items-center justify-center h-9 px-3 rounded-lg text-sm';
     const btnOutline = `${btnBase} font-semibold border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 hover:dark:bg-slate-700`;
-    const btnPrimaryEnabled = `${btnBase} font-bold min-w-[96px] bg-cyan-600 hover:bg-cyan-700 text_white`;
-    const btnPrimaryDisabled = `${btnBase} font-bold min-w-[96px] bg-slate-300 dark:bg-slate-700 cursor-not-allowed text_white`;
+    const btnPrimaryEnabled = `${btnBase} font-bold min-w-[96px] bg-cyan-600 hover:bg-cyan-700 text-white`;
+    const btnPrimaryDisabled = `${btnBase} font-bold min-w-[96px] bg-slate-300 dark:bg-slate-700 cursor-not-allowed text-white`;
     return (
       <div className="p-6">
         <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -349,7 +377,7 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className={it.status==='locked'?btnPrimaryDisabled:btnPrimaryEnabled}>{primaryLabel}</button>
+                    <button onClick={()=>{ if(it.status!=='locked'){ setSelectedLesson(it); setPlaying(true); } }} className={it.status==='locked'?btnPrimaryDisabled:btnPrimaryEnabled}>{primaryLabel}</button>
                     <button onClick={()=>toggle(it.id)} className={btnOutline}>{isOpen?'Đóng':'Chi tiết'}</button>
                   </div>
                 </div>
@@ -392,7 +420,7 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
             </div>
             <div className="flex items-center gap-2">
               <button onClick={()=>setShowCollection(true)} className="px-3 py-2 rounded-lg text-sm font-bold border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 hover:dark:bg-slate-700">Bộ sưu tập</button>
-              <button className="px-3 py-2 bg-cyan-600 text-white rounded-lg font-bold text-sm hover:bg-cyan-700">Tiếp tục học</button>
+              <button onClick={()=>startLesson()} className="px-3 py-2 bg-cyan-600 text-white rounded-lg font-bold text-sm hover:bg-cyan-700">Tiếp tục học</button>
             </div>
           </div>
           <CurriculumOutline />
@@ -428,7 +456,7 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
             <button className="text-slate-500 hover:text-slate-700 dark:text-slate-300" onClick={() => setSelectedLesson(null)}>Đóng</button>
             <h3 className="text-2xl font-extrabold mt-2 text-slate-900 dark:text-white">{selectedLesson.title}</h3>
             <p className="mt-2 text-slate-600 dark:text-slate-300">Bài học gồm kiến thức nền tảng, tình huống mô phỏng, câu hỏi tương tác và kiểm tra nhanh. Sẵn sàng chưa?</p>
-            <button className="mt-6 w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-xl">{selectedLesson.status === 'completed' ? 'Ôn lại' : 'Bắt đầu'}</button>
+            <button onClick={()=>setPlaying(true)} className="mt-6 w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 rounded-xl">{lessonProgress>=100 ? 'Ôn lại' : lessonProgress===0 ? 'Bắt đầu học' : 'Tiếp tục học'}</button>
           </div>
         </div>
       )}
@@ -446,6 +474,34 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
             </div>
           </div>
         </div>
+      )}
+
+      {playing && selectedLesson && (
+        <LessonPlayer
+          title={selectedLesson.title}
+          sections={sectionsMemo}
+          onClose={()=>setPlaying(false)}
+          onNext={()=>{
+            if (!selectedLesson) { setPlaying(false); return; }
+            const idx = roadmap.findIndex(r => r.id === selectedLesson.id);
+            const next = idx>=0 ? roadmap.slice(idx+1).find(r => r.status !== 'locked') : null as any;
+            if (next) {
+              setSelectedLesson(next);
+              setPlaying(true);
+              setLessonProgress(0);
+              try { localStorage.setItem(`progress:${userRole}:${next.id}`, '0'); } catch {}
+            } else {
+              setPlaying(false);
+            }
+          }}
+          onProgress={(p)=>{
+            setLessonProgress(p);
+            try {
+              localStorage.setItem(`progress:${userRole}:${selectedLesson.id}`, String(p));
+            } catch {}
+            if (p>=100) setSelectedLesson((l)=> l ? { ...l, status: 'completed' } : l);
+          }}
+        />
       )}
     </div>
   );
