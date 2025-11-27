@@ -495,6 +495,7 @@ export const StudentDashboard: React.FC<{ userRole: UserRole }> = ({ userRole })
         <LessonPlayer
           title={selectedLesson.title}
           sections={sections}
+          userRole={userRole}
           onClose={()=>setPlaying(false)}
           onNext={()=>{
             if (!selectedLesson) { setPlaying(false); return; }

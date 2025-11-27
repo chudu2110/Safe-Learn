@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { READING_TOPICS, getReadingTopicByKey } from '../content/reading';
 import { QUIZ_QUESTIONS, getThcsQuizByLesson } from '../content/quiz';
+import { getThptQuizByLesson } from '../content/quiz/thpt';
+import { UserRole } from '../types';
 
 type LessonSection = {
   id: string;
@@ -14,11 +16,12 @@ type LessonSection = {
 export const LessonPlayer: React.FC<{
   title: string;
   sections: LessonSection[];
+  userRole?: UserRole;
   initialIndex?: number;
   onClose?: () => void;
   onNext?: () => void;
   onProgress?: (percent: number) => void;
-}> = ({ title, sections, initialIndex = 0, onClose, onNext, onProgress }) => {
+}> = ({ title, sections, userRole, initialIndex = 0, onClose, onNext, onProgress }) => {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [speed, setSpeed] = useState(1);
   const [volume, setVolume] = useState(1);
@@ -508,7 +511,7 @@ export const LessonPlayer: React.FC<{
               </div>
             ) : active.kind === 'quiz' ? (
               <div className="p-6 min-h-[45vh]">
-                <QuizBlock questions={getThcsQuizByLesson(parseInt(((sections[0]?.id || '').split('-')[1]) || '1'))} onComplete={() => {
+                <QuizBlock questions={(userRole===UserRole.STUDENT_HS? getThptQuizByLesson : getThcsQuizByLesson)(parseInt(((sections[0]?.id || '').split('-')[1]) || '1'))} onComplete={() => {
                   setCompleted(prev => {
                     const next = [...prev];
                     next[activeIndex] = true;
@@ -563,7 +566,7 @@ export const LessonPlayer: React.FC<{
                     })()
                   ) : (
                     <div className="max-w-3xl mx-auto">
-                      <QuizBlock questions={getThcsQuizByLesson(parseInt(((sections[0]?.id || '').split('-')[1]) || '1'))} onComplete={() => setSubView(null)} />
+                      <QuizBlock questions={(userRole===UserRole.STUDENT_HS? getThptQuizByLesson : getThcsQuizByLesson)(parseInt(((sections[0]?.id || '').split('-')[1]) || '1'))} onComplete={() => setSubView(null)} />
                     </div>
                   )}
                 </div>
