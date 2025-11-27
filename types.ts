@@ -18,6 +18,7 @@ export enum View {
   AUTH,
   HOME,
   MOODTRACKER,
+  PARENT_ARTICLES,
 }
 
 export interface CourseModule {

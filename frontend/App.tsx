@@ -11,6 +11,7 @@ import { StudentDashboard } from './pages/StudentDashboard';
 import { ParentDashboard } from './pages/ParentDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { MoodTrackerPage } from './pages/MoodTrackerPage';
+import { ParentArticlesPage } from './pages/ParentArticlesPage';
 
 export default function App() {
   const AUTH_DISABLED = ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === 'true') || ((import.meta.env.VITE_DISABLE_AUTH ?? 'false') === '1');
@@ -175,6 +176,8 @@ export default function App() {
         return <QAPage userRole={userRole} />;
       case View.MOODTRACKER:
         return <MoodTrackerPage />;
+      case View.PARENT_ARTICLES:
+        return <ParentArticlesPage />;
       default:
         return userRole === UserRole.ADMIN ? <AdminDashboard /> : isStudent ? <StudentDashboard userRole={userRole} /> : <ParentDashboard setView={(v) => pushAppState(true, userRole, v)} />;
     }
@@ -187,7 +190,7 @@ export default function App() {
         userRole={userRole} 
         setUserRole={handleSetUserRoleAndSwitchView} 
         setView={(view) => {
-          if (userRole === UserRole.PARENT && !(view === View.PARENT_DASHBOARD || view === View.SCENARIOS || view === View.MAP || view === View.QA)) return;
+          if (userRole === UserRole.PARENT && !(view === View.PARENT_DASHBOARD || view === View.SCENARIOS || view === View.MAP || view === View.QA || view === View.PARENT_ARTICLES)) return;
           if (userRole !== UserRole.PARENT && view === View.PARENT_DASHBOARD) return;
           pushAppState(true, userRole, view);
         }}
