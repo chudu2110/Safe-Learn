@@ -119,7 +119,7 @@ export const AdminMapPage: React.FC = () => {
   const selectEvPlaceSuggestion = (item: any) => { setEvPlaceOpen(false); setEvPlace(item.display_name || evPlace); };
   const toggleFilter = (filter: MapServiceType) => { setFilters(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]); };
   const serviceColors: Record<MapServiceType, string> = {
-    [MapServiceType.GYNECOLOGY]: 'bg-accent-purple', [MapServiceType.ANDROLOGY]: 'bg-cyan-500', [MapServiceType.COUNSELING]: 'bg-accent-orange', [MapServiceType.HOTLINE]: 'bg-red-500',
+    [MapServiceType.GYNECOLOGY]: 'bg-accent-purple', [MapServiceType.ANDROLOGY]: 'bg-cyan-500', [MapServiceType.COUNSELING]: 'bg-accent-orange', [MapServiceType.HOTLINE]: 'bg-red-500', [MapServiceType.CURRENT_EVENTS]: 'bg-orange-500',
   };
   const locateMe = async () => {
     if (userPos && mapRef.current) { mapRef.current.setView(userPos, 15, { animate: true }); return; }

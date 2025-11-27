@@ -45,6 +45,7 @@ export enum MapServiceType {
   ANDROLOGY = 'Nam khoa',
   COUNSELING = 'Tư vấn',
   HOTLINE = 'Hotline',
+  CURRENT_EVENTS = 'Sự kiện đang diễn ra',
 }
 
 export interface ServicePoint {
