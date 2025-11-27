@@ -2,6 +2,60 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ADMIN_STATS_DATA, MODULE_COMPLETION_DATA, USER_DISTRIBUTION_DATA, ICONS } from '../constants';
 
 export const AdminDashboard: React.FC = () => {
+    const AnimatedProgressBar: React.FC<{ percent: number; colorClass?: string; durationMs?: number }> = ({ percent, colorClass = 'bg-cyan-500', durationMs = 1000 }) => {
+        const [width, setWidth] = useState('0%');
+        useEffect(() => {
+            const clamped = Math.max(0, Math.min(100, percent));
+            const id = requestAnimationFrame(() => setWidth(`${clamped}%`));
+            return () => cancelAnimationFrame(id);
+        }, [percent]);
+        return (
+            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                <div
+                    className={`${colorClass} h-2.5 rounded-full transition-all ease-out`}
+                    style={{ width, transitionDuration: `${durationMs}ms` }}
+                ></div>
+            </div>
+        );
+    };
+    const AnimatedPercent: React.FC<{ value: number; durationMs?: number }> = ({ value, durationMs = 600 }) => {
+        const [val, setVal] = useState(0);
+        useEffect(() => {
+            let int: number | undefined;
+            let step = 0;
+            const steps = Math.max(1, Math.round(durationMs / 16));
+            int = window.setInterval(() => {
+                step++;
+                const p = Math.min(step / steps, 1);
+                const next = Math.round(value * p);
+                setVal(next);
+                if (p >= 1 && int) {
+                    clearInterval(int);
+                }
+            }, 16);
+            return () => { if (int) clearInterval(int); };
+        }, [value, durationMs]);
+        return (<>{val}%</>);
+    };
+    const AnimatedNumber: React.FC<{ value: number; durationMs?: number; locale?: string }> = ({ value, durationMs = 600, locale = 'vi-VN' }) => {
+        const [val, setVal] = useState(0);
+        useEffect(() => {
+            let int: number | undefined;
+            let step = 0;
+            const steps = Math.max(1, Math.round(durationMs / 16));
+            int = window.setInterval(() => {
+                step++;
+                const p = Math.min(step / steps, 1);
+                const next = Math.round(value * p);
+                setVal(next);
+                if (p >= 1 && int) {
+                    clearInterval(int);
+                }
+            }, 16);
+            return () => { if (int) clearInterval(int); };
+        }, [value, durationMs]);
+        return (<>{val.toLocaleString(locale)}</>);
+    };
     const StatCard: React.FC<{ title: string; targetValue: number; change: number; icon: React.ReactNode; iconColor?: string; isPercent?: boolean; onValueChange?: (v: number) => void; }> = ({ title, targetValue, change, icon, iconColor = 'text-slate-600 dark:text-slate-200', isPercent = false, onValueChange }) => {
         const [val, setVal] = useState(0);
         const startedRef = useRef(false);
@@ -25,7 +79,6 @@ export const AdminDashboard: React.FC = () => {
             }, frameMs);
             return () => { if (int) clearInterval(int); };
         }, [targetValue]);
-
         useEffect(() => {
             let to: number | undefined;
             const schedule = () => {
@@ -81,11 +134,9 @@ export const AdminDashboard: React.FC = () => {
                             <div key={module.id}>
                                 <div className="flex justify-between text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">
                                     <span>{module.title}</span>
-                                    <span>{module.completion}%</span>
+                                    <span><AnimatedPercent value={module.completion} /></span>
                                 </div>
-                                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
-                                    <div className="bg-cyan-500 h-2.5 rounded-full" style={{ width: `${module.completion}%` }}></div>
-                                </div>
+                                <AnimatedProgressBar percent={module.completion} />
                             </div>
                         ))}
                     </div>
@@ -93,22 +144,22 @@ export const AdminDashboard: React.FC = () => {
                 <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700 transform-gpu transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl">
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Phân bổ người dùng</h3>
                     <div className="space-y-3">
-                         {USER_DISTRIBUTION_DATA.map((item, index) => {
-                             const colors = ['bg-cyan-500', 'bg-accent-purple', 'bg-accent-orange'];
-                             const total = USER_DISTRIBUTION_DATA.reduce((sum, i) => sum + i.count, 0);
-                             const percentage = ((item.count / total) * 100).toFixed(1);
-                             return (
-                                 <div key={item.role}>
+                        {USER_DISTRIBUTION_DATA.map((item, index) => {
+                            const colors = ['bg-cyan-500', 'bg-accent-purple', 'bg-accent-orange'];
+                            const total = USER_DISTRIBUTION_DATA.reduce((sum, i) => sum + i.count, 0);
+                            const percentage = (item.count / total) * 100;
+                            return (
+                                <div key={item.role}>
                                     <div className="flex justify-between font-semibold text-slate-800 dark:text-slate-300">
                                         <span>{item.role}</span>
-                                        <span>{item.count.toLocaleString('vi-VN')}</span>
+                                        <span><AnimatedNumber value={item.count} /></span>
                                     </div>
-                                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 mt-1">
-                                         <div className={`${colors[index % colors.length]} h-2.5 rounded-full`} style={{ width: `${percentage}%` }}></div>
+                                    <div className="mt-1">
+                                        <AnimatedProgressBar percent={percentage} colorClass={colors[index % colors.length]} />
                                     </div>
                                 </div>
-                            )
-                         })}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
