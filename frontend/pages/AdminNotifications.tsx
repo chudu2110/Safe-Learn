@@ -6,6 +6,7 @@ type AnonItem = { id: number; role: UserRole; text: string; createdAt: number; r
 
 export const AdminNotifications: React.FC = () => {
   const STORAGE_KEY = 'anonymous_questions';
+  const ANSWERS_KEY = 'qa_answers';
   const [items, setItems] = useState<AnonItem[]>([]);
   const [filter, setFilter] = useState<'all' | 'student' | 'parent' | 'unreviewed'>('all');
   const [replyInputs, setReplyInputs] = useState<Record<number, string>>({});
@@ -65,6 +66,18 @@ export const AdminNotifications: React.FC = () => {
       return next;
     });
     setReplyInputs(prev => ({ ...prev, [id]: '' }));
+    try {
+      const raw = localStorage.getItem(ANSWERS_KEY);
+      const list: Array<{ id: number; role: UserRole; question: string; answer: string; createdAt: number }> = raw ? JSON.parse(raw) : [];
+      const newId = list.length ? list[list.length - 1].id + 1 : 1;
+      const item = items.find(i => i.id === id);
+      if (item) {
+        const record = { id: newId, role: item.role, question: item.text, answer: value, createdAt: Date.now() };
+        list.push(record);
+        localStorage.setItem(ANSWERS_KEY, JSON.stringify(list));
+        try { window.dispatchEvent(new CustomEvent('qa_answers_updated')); } catch {}
+      }
+    } catch {}
   };
 
   const deleteReviewed = () => {

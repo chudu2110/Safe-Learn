@@ -8,6 +8,28 @@ export const ICONS = {
   map: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>,
   scenarios: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6"><circle cx="12" cy="5" r="2" strokeWidth="2"/><circle cx="6" cy="19" r="2" strokeWidth="2"/><circle cx="18" cy="19" r="2" strokeWidth="2"/><path d="M12 7v4" strokeWidth="2" strokeLinecap="round"/><path d="M12 11c0 2-2 3-4 3H6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 11c0 2 2 3 4 3h2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   admin: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path fillRule="evenodd" d="M2.25 2.25a.75.75 0 0 0 0 1.5H3v10.5a3 3 0 0 0 3 3h1.21l-2.12 3.18a.75.75 0 0 0 1.27 1.27L9 18.21l2.64 3.96a.75.75 0 0 0 1.27-1.27L10.79 18H12a3 3 0 0 0 3-3V3.75h.75a.75.75 0 0 0 0-1.5H2.25Zm6 6a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75V8.25Zm3 0a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75V8.25ZM9 11.25a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75v-.01a.75.75 0 0 0-.75-.75H9Zm3.75.75a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75v-.01ZM9.75 15a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 0 0 .75-.75v-.01a.75.75 0 0 0-.75-.75H9.75Zm3.75.75a.75.75 0 0 1 .75-.75h.01a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75v-.01Z" clipRule="evenodd" /><path d="M16.5 2.25a.75.75 0 0 0 0 1.5h.75a.75.75 0 0 0 0-1.5h-.75Z" /></svg>,
+  bell: (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6" fill="currentColor">
+      <defs>
+        <radialGradient id="bellGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="12" cy="12" r="10" fill="url(#bellGlow)">
+        <animate attributeName="r" values="9;10;9" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.25;0.1;0.25" dur="2s" repeatCount="indefinite" />
+      </circle>
+      <g>
+        <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2Z" />
+        <path d="M19 15V11a7 7 0 1 0-14 0v4l-2 2v1h20v-1l-2-2Z" />
+        <animateTransform attributeName="transform" type="rotate" values="-6 12 12;6 12 12;-6 12 12" dur="2s" repeatCount="indefinite" />
+      </g>
+      <circle cx="12" cy="18" r="1.6" opacity="0.9">
+        <animate attributeName="r" values="1.2;1.6;1.2" dur="2s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  ),
   sun: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5"><circle cx="12" cy="12" r="4" strokeWidth="2"/><path strokeLinecap="round" strokeWidth="2" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>,
   moon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5"><path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>,
   body: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 21.75c-2.673 0-5.262-.424-7.812-1.25a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" /></svg>,
