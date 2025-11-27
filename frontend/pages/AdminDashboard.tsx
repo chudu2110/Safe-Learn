@@ -58,10 +58,12 @@ export const AdminDashboard: React.FC = () => {
     };
     const StatCard: React.FC<{ title: string; targetValue: number; change: number; icon: React.ReactNode; iconColor?: string; isPercent?: boolean; onValueChange?: (v: number) => void; }> = ({ title, targetValue, change, icon, iconColor = 'text-slate-600 dark:text-slate-200', isPercent = false, onValueChange }) => {
         const [val, setVal] = useState(0);
+        const [changeVal, setChangeVal] = useState(0);
         const startedRef = useRef(false);
         useEffect(() => {
             startedRef.current = false;
             setVal(0);
+            setChangeVal(0);
             let int: number | undefined;
             let step = 0;
             const steps = 30;
@@ -72,6 +74,8 @@ export const AdminDashboard: React.FC = () => {
                 const next = Math.round(targetValue * p);
                 setVal(next);
                 onValueChange && onValueChange(next);
+                const nextChange = Math.round(change * p);
+                setChangeVal(nextChange);
                 if (p >= 1 && int) {
                     clearInterval(int);
                     startedRef.current = true;
@@ -85,13 +89,19 @@ export const AdminDashboard: React.FC = () => {
                 const delay = (Math.floor(Math.random() * 3) + 2) * 1000;
                 to = window.setTimeout(() => {
                     if (!startedRef.current) { schedule(); return; }
+                    const deltaMag = Math.floor(Math.random() * 10);
+                    const deltaSign = Math.random() < 0.5 ? -1 : 1;
                     setVal(prev => {
-                        const deltaMag = Math.floor(Math.random() * 10);
-                        const deltaSign = Math.random() < 0.5 ? -1 : 1;
                         let n = prev + deltaSign * deltaMag;
                         if (isPercent) n = Math.max(0, Math.min(100, n)); else n = Math.max(0, n);
                         onValueChange && onValueChange(n);
                         return n;
+                    });
+                    setChangeVal(prev => {
+                        const cDeltaMag = Math.floor(Math.random() * 3) + 1;
+                        let c = prev + deltaSign * cDeltaMag;
+                        c = Math.max(-100, Math.min(100, c));
+                        return c;
                     });
                     schedule();
                 }, delay);
@@ -101,6 +111,7 @@ export const AdminDashboard: React.FC = () => {
         }, [isPercent, onValueChange]);
 
         const display = isPercent ? `${val}%` : val.toLocaleString('vi-VN');
+        const changePositive = changeVal >= 0;
         return (
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg shadow-slate-900/5 dark:shadow-[0_0_18px_rgba(15,23,42,0.35)] border border-slate-200 dark:border-slate-700 transform-gpu transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-xl">
                 <div className="flex items-center justify-between">
@@ -108,8 +119,8 @@ export const AdminDashboard: React.FC = () => {
                     <div className={`w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/10 ring-1 ring-slate-200 dark:ring-white/10 ${iconColor}`}>{icon}</div>
                 </div>
                 <p className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{display}</p>
-                <div className={`flex items-center mt-1 text-sm font-semibold ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {change >= 0 ? '▲' : '▼'} {Math.abs(change)}% so với tháng trước
+                <div className={`flex items-center mt-1 text-sm font-semibold ${changePositive ? 'text-green-500' : 'text-red-500'}`}>
+                    {changePositive ? '▲' : '▼'} {Math.abs(changeVal)}% so với tháng trước
                 </div>
             </div>
         );
