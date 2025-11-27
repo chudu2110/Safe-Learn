@@ -136,3 +136,4 @@ export const getThcsQuizByLesson = (lessonId: number): QuizQuestion[] => {
   const key = QUIZ_THCS_MAP[lessonId];
   return QUIZ_QUESTIONS[key] || QUIZ_QUESTIONS['day_thi_be_gai'];
 };
+export * from './thpt';
