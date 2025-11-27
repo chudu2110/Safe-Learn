@@ -10,6 +10,7 @@ import { ScenarioPage } from './pages/ScenarioPage';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { ParentDashboard } from './pages/ParentDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminNotifications } from './pages/AdminNotifications';
 import { MoodTrackerPage } from './pages/MoodTrackerPage';
 import { ParentArticlesPage } from './pages/ParentArticlesPage';
 import { ParentVideosPage } from './pages/ParentVideosPage';
@@ -170,6 +171,8 @@ export default function App() {
         return <ParentDashboard setView={(v) => pushAppState(true, userRole, v)} />;
       case View.ADMIN_DASHBOARD:
         return <AdminDashboard />;
+      case View.ADMIN_NOTIFICATIONS:
+        return <AdminNotifications />;
       case View.SCENARIOS:
         return (isStudent || userRole === UserRole.PARENT) ? <ScenarioPage userRole={userRole} /> : <StudentDashboard userRole={userRole} />;
       case View.MAP:

@@ -12,6 +12,20 @@ export const QAPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
     ? 'Ví dụ: Nói chuyện về giới tính với con 10 tuổi như thế nào?'
     : 'Ví dụ: Làm sao để từ chối khi bạn bè rủ xem phim người lớn?';
 
+  const saveAnonymousQuestion = (role: UserRole, text: string) => {
+    try {
+      const key = 'anonymous_questions';
+      const raw = localStorage.getItem(key);
+      const list: Array<{ id: number; role: UserRole; text: string; createdAt: number; reviewed?: boolean }>
+        = raw ? JSON.parse(raw) : [];
+      const id = list.length ? list[list.length - 1].id + 1 : 1;
+      const item = { id, role, text: text.trim(), createdAt: Date.now(), reviewed: false };
+      list.push(item);
+      localStorage.setItem(key, JSON.stringify(list));
+      try { window.dispatchEvent(new CustomEvent('anonymous_questions_updated')); } catch {}
+    } catch {}
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
@@ -20,6 +34,7 @@ export const QAPage: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
     const result = await moderateQuestion(question);
     if (result.isAppropriate) {
       setMessage({ text: result.reason, type: 'success' });
+      saveAnonymousQuestion(userRole, question);
       setQuestion('');
     } else {
       setMessage({ text: result.reason, type: 'error' });

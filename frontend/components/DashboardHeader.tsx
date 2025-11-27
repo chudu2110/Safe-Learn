@@ -90,7 +90,10 @@ export const DashboardHeader: React.FC<{
                 <NavButton ref={(el) => (btnRefs.current[View.MOODTRACKER] = el)} view={View.MOODTRACKER} icon={ICONS.pencil} label="Nhật kí cảm xúc" />
               </>
             ) : isAdmin ? (
-              <NavButton ref={(el) => (btnRefs.current[View.ADMIN_DASHBOARD] = el)} view={View.ADMIN_DASHBOARD} icon={ICONS.admin} label="Thống kê" />
+              <>
+                <NavButton ref={(el) => (btnRefs.current[View.ADMIN_DASHBOARD] = el)} view={View.ADMIN_DASHBOARD} icon={ICONS.admin} label="Thống kê" />
+                <NavButton ref={(el) => (btnRefs.current[View.ADMIN_NOTIFICATIONS] = el)} view={View.ADMIN_NOTIFICATIONS} icon={ICONS.chat} label="Thông báo" />
+              </>
             ) : (
               <>
                 <NavButton ref={(el) => (btnRefs.current[homeView] = el)} view={homeView} icon={ICONS.dashboard} label="Tổng quan" />
